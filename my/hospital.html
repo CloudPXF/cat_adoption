@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="hospital_page" v-cloak id="hospital_page">
+    <div v-for="item in hospitalList" class="hospital_item">
+        <img class="hospital_item_avatar" :src="host+item.h_img">
+        <div class="hospital_item_content">
+            <p class="item_content_title">{{item.h_name}}</p>
+            <p class="item_content_text">
+                <label class="text_title">电话：</label>{{item.h_phone}}<br>
+                <label class="text_title">地址：</label>{{item.h_place}}<br>
+                <label class="text_title">营业时间：</label>{{item.h_running_time}}<br>
+                <label class="text_title">介绍：</label>{{item.h_introduce}}
+            </p>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: "#hospital_page",
+        data: {
+            hospitalList: [],
+        },
+        methods: {
+            getHospitalList: function () {
+                var that = this;
+                $.ajax({
+                    type: "get",
+                    url: host + "customer/release/hospitalList",
+                    data: {},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if(res){
+                            that.hospitalList = res;
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        app.getHospitalList();
+    };
+
+    //跳转至设置页面
+    function tosetting() {
+        window.location.href = 'setting.html';
+    }
+
+    //跳转至我喜欢页面
+    function tolike() {
+        window.location.href = 'like.html';
+    }
+
+    //跳转至合作医院页面
+    function tohospital() {
+        window.location.href = 'hospital.html';
+    }
+    //跳转至常见问题页面
+    function toquestion() {
+        window.location.href = 'question.html';
+    }
+</script>
+</body>
+
+</html>

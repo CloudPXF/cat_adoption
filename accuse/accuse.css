@@ -1,0 +1,50 @@
+.publish_textarea {
+    width: 80%;
+    margin: 0 auto 18px auto;
+    border: 2px solid #77AF9C;
+    border-radius: 20px;
+}
+
+.textarea_title {
+    line-height: 32px;
+    margin: 0 15px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+.textarea_body {
+    width: 90%;
+    height: 204px;
+    margin: 0 15px;
+    border: 0;
+    font-size: 16px;
+    color: #999999;
+}
+
+.publish_upload {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.upload_title {
+    line-height: 32px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+.publish_button {
+    width: 80%;
+    height: 32px;
+    margin: 0 auto 50px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #77AF9C;
+    border: 2px solid #77AF9C;
+    border-radius: 20px;
+    font-size: 16px;
+    color: white;
+}
+
+[v-cloak]{
+    display:none
+}

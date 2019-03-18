@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="login_page">
+    <img class="login_avatar" src="../images/xixisenglin.jpg">
+    <button class="login_button">关于熙熙森林</button>
+    <div class="ours_brief">
+        &emsp;&emsp;熙熙森林成立于2003年，是广州第一个经政府承认的以猫为主题的非营利机构。我们宣传科学养猫，科学理性救助与科学领养知识，并且提倡“助人救助”的理念。同时，熙熙森林已在进行审核筛选后与相关的宠物医院达成协议，为流浪猫提供免费的绝育名额以及其它优惠政策。
+        <br>&emsp;&emsp;关注熙熙森林的公众号及微博即可查看熙熙的最新动态。若存在相关疑问，欢迎添加熙熙森林小助手的微信进行咨询。
+    </div>
+    <button class="login_button">联系我们</button>
+    <div class="ours_contact_info">
+        <div class="contact_info_item">
+            <img class="info_item_icon" src="../images/weibo.png">
+            <label class="info_item_content" style="font-size: 13px;"><a href="http://t.sina.com.cn/1678568984">http://t.sina.com.cn/1678568984</a></label>
+        </div>
+        <div class="contact_info_item">
+            <img class="info_item_icon" src="../images/wechat.png">
+            <label class="info_item_content">公众号：熙熙森林</label>
+        </div>
+        <div class="contact_info_item">
+            <img class="info_item_icon" src="../images/web.png">
+            <label class="info_item_content"><a href="http://www.gzcat.org/">http://www.gzcat.org/</a></label>
+        </div>
+        <div class="contact_info_item" style="height: 120px;">
+            <img class="info_item_icon" src="../images/helper.png">
+            <label class="info_item_content" style="font-size: 15px;">小助手微信号：</label>
+            <div><img src="http://120.78.183.57/cat_adoption2/public/uploads/the_qrcode.png" width="100px;"></div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<!--页面JS代码-->
+<script type="text/javascript">
+    //登录
+    function login() {
+        var user_name = $('#user_name').val();
+        var user_password = $('#user_password').val();
+        if(!user_name){
+            $.toptip('请输入用户名！');
+        }else if(!user_password){
+            $.toptip('请输入密码！');
+        }else {
+            $.toast('登录成功！');
+            setTimeout(function () {
+                window.history.go(-1);
+            }, 1000);
+        }
+    }
+</script>
+</body>
+
+</html>

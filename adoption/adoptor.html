@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="adoption.css">
+</head>
+<body>
+<div id="adoptors" v-cloak class="adoptor">
+    <div class="message">
+        <div class="avatar"><img :src="member.m_avatar" width="140" style="border-radius: 50%;"></div>
+        <div class="message-message">
+            <div class="message-name">
+                <div><img src="../images/name.png" width="13.5"></div>
+                <div class="text">{{member.m_username}}</div>
+            </div>
+            <div class="message-phone">
+                <div><img src="../images/phone.png" width="13.5"></div>
+                <div class="text">{{member.m_phone}}</div>
+            </div>
+            <div class="message-location">
+                <div><img src="../images/place.png" width="13.5" style="height: 13.5px  "></div>
+                <div class="text">{{member.m_place}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="accout">
+        <div class="account-div"><img src="../images/publish_account.png" width="17" style="width: 17px;height: 17px;"><div class="text">发布：  {{release_number}}次</div></div>
+        <div class="account-div"><img src="../images/adopt_account.png" width="17" style="width: 17px;height: 17px;"><div class="text">领养：  {{get_cat_number}}次</div></div>
+        <div class="account-div"><img src="../images/accused_account.png" width="17" style="width: 17px;height: 17px;"><div class="text">被举报：  {{be_report_number}}次</div></div>
+    </div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="publish-detail">
+        <div class="publish-detail-title">TA的发布</div>
+        <div class="publish-detail-list">
+            <div v-for="item in catList" class="publish-detail-item"><img :src="host+item.c_cover"></div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: "#adoptors",
+        data: {
+            m_id: "",
+            member: "",
+            catList: "",
+            release_number: 0,
+            get_cat_number: 0,
+            be_report_number: 0
+        },
+        methods: {
+            getMemberInfo:function () {
+                var that = this;
+                if(getUrlParam("alm_id")){
+                    that.m_id = getUrlParam("alm_id");
+                }else if(getUrlParam("m_id")){
+                    that.m_id = getUrlParam("m_id");
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: host + "customer/user/getMemberDetailInfo",
+                    data: {m_id: that.m_id},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if(res.member){
+                            that.member = res.member;
+                            that.catList = res.releaseCatList;
+                            that.release_number = res.release_number;
+                            that.get_cat_number = res.get_cat_number;
+                            that.be_report_number = res.be_report_number;
+                        }else{
+                            $.alert("未获取该用户信息")
+                        }
+                    }
+                })
+            }
+        }
+    })
+
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        if(getUrlParam("alm_id")){
+            setTimeout(function () {
+                app.getMemberInfo();
+            },500)
+        }else if (getUrlParam("m_id")){
+            setTimeout(function () {
+                app.getMemberInfo();
+            },500)
+        }else{
+            $.alert("未获取该用户信息")
+        }
+    };
+</script>
+</body>
+</html>

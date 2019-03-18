@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="apply.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="adoption_page" v-cloak id="adoption_page">
+    <!--<div class="adoption_navbar">-->
+        <!--<div v-on:click="changeTab(0)" class="nav-item nav-item-on" style="border-right: 1px solid; border-color: rgba(0,0,0,0.1);">-->
+            <!--<div><img class="nav-img" src="../images/proposer_on.png" width="27"></div>-->
+            <!--<div class="nav-item-text">全部</div>-->
+        <!--</div>-->
+        <!--<div v-on:click="changeTab(1)" class="nav-item" style="border-right: 1px solid;border-color: rgba(0,0,0,0.1);">-->
+            <!--<div><img class="nav-img" src="../images/proposer_passed.png" width="27"></div>-->
+            <!--<div class="nav-item-text">通过审核</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="adoption-list">
+        <div v-for="item in adoptorList" class="adoption-item">
+            <div class="adoption-item-message">
+                <div class="adoption-item-message-name">
+                    {{item.al_uname}}
+                </div>
+            </div>
+            <div class="adoption-item-status">
+                <div v-on:click="toProposer" :id="item.al_id" :data-status="item.al_status"><div>查看申请表</div></div>
+                <div v-on:click="toDetail" :id="item.alm_id" style="margin-left: 10px;"><div>申请者信息</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    //$(".nav-item-text")[1].setAttribute("style","color: rgba(119,175,156,1)");
+    var app = new Vue({
+        el: '#adoption_page',
+        data: {
+            adoptorList: [],
+            tab: 0,
+        },
+        methods: {
+            //得到喵咪列表
+            getAdoptorList: function (label) {
+                var that = this;
+                $.ajax({
+                    type: "post",
+                    url: host + 'customer/cat/getAdopterList',
+                    data: {c_id: getUrlParam("c_id")},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON" ,
+                    success: function (res) {
+                        //alert(res);
+                        //console.log(res);
+                        if(!res.errorCode){
+                            that.adoptorList = res.adopterList;
+                            if(res.adopterList.length == 0) {
+                                $.alert("暂无申请者",function(){
+                                    window.history.back();
+                                })
+                            }
+                        }else{
+                            $.alert(res.errorCode)
+                        }
+                    },
+                })
+            },
+            //详情
+            toDetail: function (e) {
+                var that = this;
+                //console.log(e.currentTarget)
+                //alert(e.currentTarget.id)
+                if(e.currentTarget.id){
+                    window.location.href = '../adoption/adoptor.html?m_id=' + e.currentTarget.id;
+                }else{
+                    $.alert("未能获取该用户信息")
+                }
+            },
+            //申请表
+            toProposer: function (e) {
+                var that = this;
+                //alert(e.currentTarget.id)
+                if(e.currentTarget.id){
+                    window.location.href = 'proposer.html?al_id=' + e.currentTarget.id + '&al_status=' + e.currentTarget.dataset.status + '&c_id=' +getUrlParam("c_id");
+                }else{
+                    $.alert("未能获取该用户信息")
+                }
+            },
+            //切换
+            // changeTab: function (nav) {
+            //     for(var i = 0;i < 2;i++){
+            //         $(".nav-item")[i].setAttribute("class","nav-item");
+            //     }
+            //     if(nav == 0){
+            //         $(".nav-img")[0].setAttribute("src","../images/proposer_on.png");
+            //         $(".nav-item-text")[0].setAttribute("style","color: #ffffff");
+            //         $(".nav-img")[1].setAttribute("src","../images/proposer_passed.png");
+            //         $(".nav-item-text")[1].setAttribute("style","color: rgba(119,175,156,1)");
+            //     }else{
+            //         $(".nav-img")[0].setAttribute("src","../images/proposer.png");
+            //         $(".nav-item-text")[1].setAttribute("style","color: #ffffff");
+            //         $(".nav-img")[1].setAttribute("src","../images/proposer_passed_on.png");
+            //         $(".nav-item-text")[0].setAttribute("style","color: rgba(119,175,156,1)");
+            //     }
+            //     $(".nav-item")[nav].setAttribute("class","nav-item nav-item-on");
+            //     this.tab = nav;
+            // }
+        }
+    })
+</script>
+
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        app.getAdoptorList();
+    };
+</script>
+</body>
+
+</html>

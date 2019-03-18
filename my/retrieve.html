@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="retrieve_page">
+    <div class="retrieve_input" style="margin-bottom: 20px;">
+        <label class="input_title">手&emsp;机</label>
+        <input id="phone" class="input_body" placeholder="请输入注册手机" type="number" name="u_phone">
+    </div>
+    <div class="retrieve_input" style="margin-top: 0;margin-bottom: 20px;">
+        <label class="input_title">验证码</label>
+        <input id="code" class="input_body" placeholder="请输入验证码" type="text" name="code">
+    </div>
+    <div class="retrieve_input" style="margin-top: 0;margin-bottom: 20px;">
+        <label class="input_title">新密码</label>
+        <input id="password" class="input_body" placeholder="请输入新密码" type="password" name="password">
+    </div>
+    <button onclick="getCode()" class="login_button" style="margin-bottom: 20px;">获取验证码</button>
+    <button onclick="enSure()" class="login_button">确&emsp;&emsp;&emsp;&emsp;认</button>
+    <p id="tips" class="retrieve_tips"></p>
+</div>
+<div class="success_page">
+    <label class="success_text">&emsp;&emsp;您的密码已成功修改</label>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<!--页面JS代码-->
+<script type="text/javascript">
+    //获取验证码
+    var trueCode = "";
+    var phone = "";
+    function getCode() {
+        var phone = $("#phone").val();
+        if(getCookie("openid")){
+            if(phone){
+                $.ajax({
+                    type: "post",
+                    url: host + "/customer/user/getIdentifyCode",
+                    data: {
+                        u_openid: getCookie("openid"),
+                        m_phone: phone
+                    },
+                    cache: false,
+                    async: false,
+                    success: function (res) {
+                        if(!res.errorCode){
+                            $.toast("验证码五分钟内有效");
+                        }else{
+                            alert(res.message);
+                        }
+                    }
+                })
+            }else{
+                alert("请填写手机号")
+            }
+        }else{
+            alert("未获取微信信息")
+        }
+    }
+    function enSure() {
+        var code = $("#code").val();
+        var password = $("#password").val();
+        //alert(code)
+        $.ajax({
+            type: "post",
+            url: host + "/customer/user/changePassword",
+            data: {
+                u_openid: getCookie("openid"),
+                m_identify_code: code,
+                m_password: password
+            },
+            cache: false,
+            async: false,
+            success: function (res) {
+                if(!res.errorCode){
+                    $.alert("修改成功",function(){
+                        window.history.go(-2);
+                    })
+                }else{
+                    alert(res.message);
+                }
+            }
+        })
+    }
+</script>
+<script>
+    window.onload =function (ev) {
+        var code = getUrlParam("code");
+        if (code){
+            //获取用户信息
+            $.post(host+"/customer/user/saveUserInfo", { code: code, u_join_type: 0 }, function(data) {
+                //console.log(data);
+                if (!data.errorCode) {
+                    //$.alert("success")
+                    var openId = data.userInfo.u_openid;
+                    var nickname = data.userInfo.u_nickname;
+                    var avatar = data.userInfo.u_avatar;
+                    setCookie("openid", openId, 1);
+                    setCookie("nickname", nickname, 1);
+                    setCookie("avatar", avatar, 1);
+                    //alert(openId)
+                }else{
+                    $.alert(data.errorCode + data.errmsg)
+                }
+            });
+        }else {
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe2141617ff8a8c53&redirect_uri=http://lingyang.gzcat.org/front/my/retrieve.html&response_type=code&scope=snsapi_userinfo';
+        }
+    }
+</script>
+</body>
+
+</html>

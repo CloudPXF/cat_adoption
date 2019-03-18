@@ -1,0 +1,334 @@
+.publish_input {
+    width: 80%;
+    height: 32px;
+    margin: 0 auto 18px auto;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #77AF9C;
+    border-radius: 5px;
+}
+
+.input_title {
+    height: 100%;
+    line-height: 32px;
+    margin-left: 15px;
+    font-size: 15px;
+    color: #77AF9C;
+    width: 40%;
+}
+
+.input_body {
+    width: 53%;
+    border: 0;
+    font-size: 15px;
+    color: #999999;
+}
+
+.publish_textarea {
+    width: 80%;
+    margin: 0 auto 18px auto;
+    border: 1.5px solid #77AF9C;
+    border-radius: 5px;
+}
+
+.textarea_title {
+    line-height: 32px;
+    margin: 0 15px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+.textarea_body {
+    width: 90%;
+    height: 100px;
+    margin: 0 15px;
+    border: 0;
+    font-size: 16px;
+    color: #999999;
+}
+
+.publish_upload {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.upload_title {
+    line-height: 32px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+
+.weui-agree {
+    width: 45%;
+    margin: 10px auto;
+}
+
+.publish_button {
+    width: 80%;
+    height: 32px;
+    margin: 0 auto 50px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #77AF9C;
+    border: 2px solid #77AF9C;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white;
+}
+
+.publish_success {
+    width: 85%;
+    margin: 100px auto;
+    position: relative;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: #efeff4;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.success_icon {
+    width: 50px;
+    height: 55px;
+    position: absolute;
+    right: 10px;
+    top: -50px;
+}
+
+.success_title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #285943;
+}
+
+.success_content {
+    font-size: 15px;
+    color: #285943;
+}
+
+.adoption-knowing{
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0);
+}
+.adoption-knowing-message{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background:rgba(239,239,244,1);
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: #eeeeee;
+}
+.adoption-knowing-title{
+    margin-top: 5px;
+    font-size:24px;
+    font-family:PingFang-SC-Bold;
+    color:rgba(40,89,67,1);
+    text-align: center;
+}
+.adoption-knowing-message-text{
+    width: 90%;
+    height: 450px;
+    margin-left: 5%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.adoption-knowing-message-text div{
+    font-size:15px;
+    font-family:PingFang-SC-Regular;
+    color:rgba(40,89,67,1);
+    margin-top: 10px;
+}
+.adoption-knowing-button-view{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.adoption-knowing-button{
+    height: 45px;
+    width: 50%;
+    background:rgba(119,175,156,1);
+    display: flex;
+    align-items: center;
+}
+.adoption-knowing-button div{
+    font-size: 13px;
+    color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.adoption_navbar{
+    height: 52.5px;
+    width: 100%;
+    display: flex;
+    background-color: #eeeeee;
+}
+.nav-item{
+    width: 50%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 5px;
+}
+.nav-item-on{
+    background-color: rgba(40,89,67,1);
+}
+.nav-item-on div{
+    font-weight: normal;
+    color: #ffffff;
+}
+.nav-item div {
+    font-size: 11px;
+    font-weight: bold;
+    font-family:PingFang-SC-Regular;
+    color: #ffffff;
+}
+.mypublish_navbar{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    border-bottom: 2px solid #eee;
+    box-shadow: 1px 0 2px rgba(0,0,0,0.1);
+}
+
+.navbar_item{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.item_on{
+    background-color: #EFEFF4;
+}
+
+.navbar_icon{
+    width: 30px;
+    height: 30px;
+}
+
+.navbar_text{
+    font-size: 12px;
+    color: #77AF9C;
+}
+/**
+
+ */
+.adoption-list{
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.adoption-item {
+    margin-top: 15px;
+    width: 96%;
+    margin-left: 2%;
+    height: 42px;
+    background:rgba(239,239,244,1);
+    display: flex;
+    align-items: center;
+}
+.adoption-item-message{
+    width: 50%;
+    margin-left: 10px;
+}
+.adoption-item-message-name{
+    font-size: 15px;
+    font-weight: bold;
+    font-family:PingFang-SC-Bold;
+    color:rgba(40,89,67,1);
+}
+.adoption-item-status{
+    margin-left: 10px;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.adoption-item-status div{
+    width:71px;
+    height:25px;
+    background:rgba(119,175,156,1);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+.adoption-item-status div div{
+    width: auto;
+    font-size: 10.5px;
+    font-family:PingFang-SC-Regular;
+    color: rgba(255,255,255,1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+申请者表单
+ */
+.proposer{
+    width: 100%;
+    height: 100%;
+}
+.form-message{
+    margin-top: 20px;
+    width: 95%;
+    margin-left: 2.5%;
+    height: auto;
+    border: 1px solid;
+    border-color:rgba(119,175,156,1);
+    border-radius: 5px
+}
+.form-message-item{
+    display: flex;
+    align-items: center;
+}
+.form-message-item label{
+    margin-left: 10px;
+    font-size:15px;
+    font-weight: bold;
+    font-family:PingFang-SC-Bold;
+    color:rgba(40,89,67,1);
+    line-height:24px;
+}
+.form-message-item div{
+    font-size:15px;
+    font-family:PingFang-SC-Bold;
+    color:rgba(40,89,67,1);
+    line-height:24px;
+}
+.form-button{
+    width: 70%;
+    height: 50px;
+    margin-top: 20px;
+    margin-left: 15%;
+    background:rgba(119,175,156,1);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+.form-button div{
+    width:62px;
+    font-size:17px;
+    font-family:PingFang-SC-Regular;
+    color:rgba(255,255,255,1);
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+[v-cloak]{
+    display:none
+}

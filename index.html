@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="lib/weui.min.css">
+    <link rel="stylesheet" href="css/jquery-weui.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="index_page" v-cloak id="index_page">
+    <!--搜索栏-->
+    <div style="z-index: 100;width: 100%;position: fixed;top: 0;">
+        <div class="weui-search-bar" id="searchBar">
+            <form class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input name="search" onchange="inputSearch(this)" type="search" class="weui-search-bar__input"
+                           id="searchInput"
+                           placeholder="2岁 女 广州 全白"/>
+                    <a href="index.html" class="weui-icon-clear" id="searchClear"></a>
+                </div>
+                <label class="weui-search-bar__label" id="searchText">
+                    <i class="weui-icon-search"></i>
+                    <span>搜索</span>
+                </label>
+            </form>
+            <img onclick="home()" class="home_icon" src="images/home.png" alt="home">
+            <!-- <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a> -->
+        </div>
+    </div>
+    <!-- member -->
+    <div id="index_home" class="index_home">
+        <div class="home_triangle"></div>
+
+
+        <div v-if="!isLogin">
+            <div onclick="tomy()" id="login" class="home_item">
+                <img class="home_item_ic" src="images/login.png">
+                <label class="home_item_tx">个人中心</label>
+            </div>
+            <div onclick="tomypublish()" class="home_item">
+                <img class="home_item_ic" src="images/my_publish.png">
+                <label class="home_item_tx">我的发布</label>
+            </div>
+            <div onclick="toMyAdoption()" class="home_item">
+                <img class="home_item_ic" src="images/my_adoption.png">
+                <label class="home_item_tx">我的领养</label>
+            </div>
+            <div onclick="toMessage()" class="home_item">
+                <img class="home_item_ic" src="images/noice.png">
+                <label class="home_item_tx" style="display: flex;align-items: center">消息通知
+                    <div id="message" class="message-number">
+                        <div>0</div>
+                    </div>
+                </label>
+            </div>
+            <div onclick="toContactus()" class="home_item">
+                <img class="home_item_ic" src="images/contact.png">
+                <label class="home_item_tx">联系我们</label>
+            </div>
+            <div onclick="logout()" class="home_item">
+                <img class="home_item_ic" src="images/logout.png">
+                <label class="home_item_tx">注销</label>
+            </div>
+        </div>
+
+        <div v-else>
+            <div onclick="tologin()" id="nologin" class="home_item">
+                <img class="home_item_ic" src="images/login.png">
+                <label class="home_item_tx">登录/注册</label>
+            </div>
+            <div onclick="toContactus()" class="home_item">
+                <img class="home_item_ic" src="images/contact.png">
+                <label class="home_item_tx">联系我们</label>
+            </div>
+        </div>
+    </div>
+    <!-- 轮播图 -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    ======================================轮播图请改src里面的路径即可=====================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <div class="swiper-container" style="height: 180px;">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img style="width: 100%;" src="images/swiper_1.jpg" alt="swiper"></div>
+            <div class="swiper-slide"><img style="width: 100%;" src="images/swiper_2.png" alt="swiper"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!--    =====================================================================================================    -->
+    <!-- button -->
+    <div class="index_button">
+        <a href="adoption/adoption.html" class="btn_section">
+            <img class="btn_icon" style="width: 56px;" src="images/adopt_other.png">
+            <label class="btn_text">领养</label>
+        </a>
+        <a href="publish/publish.html" class="btn_section">
+            <img class="btn_icon" src="images/publish.png">
+            <label class="btn_text">发布</label>
+        </a>
+        <a href="my/hospital.html" class="btn_section">
+            <img class="btn_icon" src="images/cooperate.png">
+            <label class="btn_text">合作医院</label>
+        </a>
+    </div>
+
+
+    <!--cats_list -->
+    <div id="catslist">
+        <div v-for="item in cats" class="catslist_item">
+            <img v-on:click="todetail" :id="item.c_id" class="item_avatar" :src="host+item.c_cover">
+            <div class="item_ft">
+                <p class="item_ft_detail">{{item.c_name}}&emsp;{{item.c_class}}&emsp;{{item.c_age}}&emsp;{{item.c_place}}&emsp;
+                    {{item.c_sex==0 ? '♂':'♀'}}</p>
+                <p class="item_ft_button" v-on:click="like" :id="item.c_id"><img src="images/like_1.png" width="13"
+                                                                                 style="margin-right: 2px"> 喜欢</p>
+            </div>
+        </div>
+        <div v-if="!nomore" class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+        <div v-else class="weui-loadmore weui-loadmore_line">
+            <span class="weui-loadmore__tips">暂无数据</span>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="lib/fastclick.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="js/jquery-weui.js"></script>
+<!--轮播图-->
+<script src="js/swiper.min.js"></script>
+<!--JS公用方法-->
+<script src="js/common.js"></script>
+<!--页面JS代码-->
+<script type="text/javascript">
+    var app = new Vue({
+        el: "#index_page",
+        data: {
+            cats: [],
+            isLogin: true,
+            page: 1,
+            nomore: false,
+            loading: false,
+        },
+        methods: {
+            getCatList: function () {
+                var that = this;
+                $.ajax({
+                    type: "get",
+                    url: host + 'customer/cat/getCatCardListByPage',
+                    data: {page: that.page},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON",
+                    success: function (res) {
+                        //alert(res);
+                        //console.log(res);
+                        that.cats = that.cats.concat(res.catList);
+                        that.page = res.page;
+                        if (res.catList.length == 0) {
+                            that.nomore = true;
+                            $(document.body).destroyInfinite();
+                        }
+                        //console.log(that.cats)
+                    },
+                })
+            },
+            //点击喵咪图片进入详情
+            todetail: function (e) {
+                var that = this;
+                window.location.href = 'detail/detail.html?c_id=' + e.target.id;
+            },
+            //我喜欢
+            like: function (e) {
+                var that = this;
+                console.log(e.currentTarget.id);
+                var c_id = e.currentTarget.id;
+                if (getCookie("m_id")) {
+                    if (c_id) {
+                        $.ajax({
+                            type: "post",
+                            url: host + 'customer/user/like',
+                            data: {m_id: m_id, c_id: c_id},
+                            cache: false,
+                            async: false,
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (!res.errorCode) {
+                                    $.toast("点赞成功");
+                                    e.target.firstElementChild.src = "images/like_1_on.png";
+                                }else if(res.errorCode == "1010") {
+                                    $.alert("您已经点赞过啦");
+                                    e.target.firstElementChild.src = "images/like_1_on.png";
+                                } else {
+                                    $.alert(res.errorCode);
+                                }
+                            },
+                        })
+                    }
+                } else {
+                    $.alert("请先登录再进行操作", "", function () {
+                        //点击确认后的回调函数
+                        window.location.href = 'my/login.html?index=1';
+                    })
+                }
+
+            }
+        }
+    })
+    var m_id = getCookie("m_id"); //用户id
+    //var nickname = "未登录"; //用户昵称
+    //var avatar = "images/pic_userheadnone.png"; //用户头像
+    var isShow = false;
+    //解决ios微信页面回退不刷新
+    var isPageHide = false;
+    window.addEventListener('pageshow', function () {
+        if (isPageHide) {
+            window.location.reload();
+        }
+    });
+    window.addEventListener('pagehide', function () {
+        isPageHide = true;
+    });
+    window.onload = function () {
+        setTimeout(function () {
+            //检查cookie是否保存用户信息
+            //$.alert("喵~领养平台仍处于内测阶段，不完善之处还请大家多多包涵也可以通过（熙熙森林服务号）告诉熙熙君喔")
+            app.getCatList();
+            // if (checkCookie()) {
+            //     //$.alert("cookie")
+            //     avatar = getCookie("avatar");
+            // } else {
+            //     var code = getUrlParam('code');
+            //     //alert(getUrlParam('usertype '));
+            //     if (code) {
+            //         //获取用户信息
+            //         $.post(host + "customer/user/saveUserInfo", {code: code, u_join_type: 0}, function (data) {
+            //             //console.log(data);
+            //             if (!data.errorCode) {
+            //                 //$.alert("success")
+            //                 var openid = data.userInfo.u_openid;
+            //                 nickname = data.userInfo.u_nickname;
+            //                 avatar = data.userInfo.u_avatar;
+            //                 setCookie("openid", openid, 1);
+            //                 setCookie("nickname", nickname, 1);
+            //                 setCookie("avatar", avatar, 1);
+            //             } else {
+            //                 $.alert(data.errorCode)
+            //             }
+            //         });
+            //     } else {
+            //         //微信授权登录
+            //         //$.alert("授权")
+            //         window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe2141617ff8a8c53&redirect_uri=http://xxkwd.xyz/cat_adoption2/front/index.html&response_type=code&scope=snsapi_userinfo';
+            //     }
+            // }
+            if (getUrlParam("search")) {
+                search();
+            }
+            //取消cookie
+            setCookie("adopt","");
+            setCookie("adoption","");
+            //渲染导航栏
+            if (getCookie("m_id") == "" || getCookie("m_id") == null) {
+                app.isLogin = true
+
+            } else {
+                app.isLogin = false;
+                getMessageNum();
+            }
+
+        },500)
+
+        //轮播图
+        $(".swiper-container").swiper({
+            loop: true,
+            autoplay: 3000
+        });
+        var $searchBar = $('#searchBar'),
+            $searchText = $('#searchText'),
+            $searchInput = $('#searchInput'),
+            $searchClear = $('#searchClear'),
+            $searchCancel = $('#searchCancel');
+
+        function hideSearchResult() {
+            $searchInput.val('');
+        }
+
+        function cancelSearch() {
+            hideSearchResult();
+            $searchBar.removeClass('weui-search-bar_focusing');
+            $searchText.show();
+        }
+
+        $searchText.on('click', function () {
+            $searchBar.addClass('weui-search-bar_focusing');
+            $searchInput.focus();
+        });
+        $searchInput
+            .on('blur', function () {
+                if (!this.value.length) cancelSearch();
+            })
+            .on('input', function () {
+
+            });
+        $searchClear.on('click', function () {
+            hideSearchResult();
+            $searchInput.focus();
+        });
+        $searchCancel.on('click', function () {
+            cancelSearch();
+            $searchInput.blur();
+        });
+    };
+
+    //导航栏
+    function home() {
+        if (isShow) {
+            isShow = false;
+            $('.index_home').css('display', 'none');
+        } else {
+            isShow = true;
+            $('.index_home').css('display', 'flex');
+        }
+    }
+
+    //分页
+    $(document.body).infinite().on("infinite", function () {
+        if (app.loading) return;
+        app.loading = true;
+        setTimeout(function () {
+            app.getCatList();
+            app.loading = false;
+            console.log("loading")
+        }, 1500);   //模拟延迟
+    });
+
+    //跳转至登录页面
+    function tologin() {
+        window.location.href = 'my/login.html';
+        home();
+    }
+
+    //跳转至个人中心
+    function tomy() {
+        window.location.href = 'my/my.html';
+        home();
+    }
+
+    //跳转至我的发布
+    function tomypublish() {
+        window.location.href = 'publish/mypublish.html';
+        home();
+    }
+
+    //跳转到我的领养
+    function toMyAdoption() {
+        window.location.href = 'adoption/myadoption.html';
+        home();
+    }
+
+    //注销登录
+    function logout() {
+        setCookie("m_id", "", -1);
+        setCookie("avatar", "", -1);
+        setCookie("email", "", -1);
+        window.location.href = "index.html"
+    }
+
+    //搜索
+    function search() {
+        var keyword = decodeURIComponent(getUrlParam("search"));
+        console.log(keyword)
+        document.getElementById("searchInput").value = keyword;
+        $.ajax({
+            type: 'POST',
+            url: host + "/customer/cat/search",
+            data: {keyword: keyword},
+            cache: false,
+            async: false,
+            success: function (res) {
+                if (!res.errorCode) {
+                    app.cats = res;
+                    app.nomore = true;
+                    $(document.body).destroyInfinite();
+                } else {
+                    alert(res.errorCode);
+                }
+            }
+        });
+    }
+
+    function inputSearch(e) {
+        console.log(e)
+        e.value = encodeURIComponent(e.value);
+    }
+
+    //跳转到联系
+    function toContactus() {
+        window.location.href = "my/contactus.html"
+    }
+
+    //跳转到站内信
+    function toMessage() {
+        window.location.href = "my/message.html"
+    }
+
+    //获取站内信数量
+    function getMessageNum() {
+        $.ajax({
+            type: 'POST',
+            url: host + "/customer/message/getMyMessage",
+            data: {m_id: getCookie("m_id")},
+            cache: false,
+            async: false,
+            success: function (res) {
+                if (!res.errorCode) {
+                    //$.alert(getCookie("m_id"))
+                    //$.alert(res.message.length)
+                    if (res.message[0].not_checked_number > 0) {
+                        setTimeout(function(){
+                            document.getElementsByClassName("message-number")[0].firstElementChild.innerHTML = res.message[0].not_checked_number;
+                        },500)
+                    } else {
+                        setTimeout(function(){
+                            document.getElementsByClassName("message-number")[0].setAttribute("style", "display:none")
+                        },500)
+                    }
+                } else {
+                    alert(res.errorCode);
+                }
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

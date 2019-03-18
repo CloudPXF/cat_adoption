@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+<div id="proposer" v-cloak class="proposer">
+    <div class="form-message">
+        <div class="form-message-item" style="margin-top: 10px;">
+            <label>真实姓名：</label>
+            <div>{{formInfo.al_uname}}</div>
+        </div>
+        <div class="form-message-item">
+            <label>家中是否有猫狗：</label>
+            <div>{{formInfo.al_feeding_catdog==1?"是":"否"}}</div>
+        </div>
+        <div class="form-message-item">
+            <label>居住情况：</label>
+            <div>{{formInfo.al_house_condition}}</div>
+        </div>
+        <div class="form-message-item">
+            <label>家中现住人数：</label>
+            <div>{{formInfo.al_population}}</div>
+        </div>
+        <div class="form-message-item">
+            <label>是否封网或是否愿意封网：</label>
+            <div>{{formInfo.al_block==1 ? "是" : "否"}}</div>
+        </div>
+        <div class="form-message-item">
+            <label>联系方式：</label>
+            <div v-if="formInfo.al_contact_type==0">手机</div>
+            <div v-if="formInfo.al_contact_type==1">微信号</div>
+            <div v-if="formInfo.al_contact_type==2">QQ</div>
+            <div v-if="formInfo.al_contact_type==3">邮箱</div>
+        </div>
+        <div class="form-message-item">
+            <label>具体联系方式：</label>
+            <div>{{formInfo.al_number}}</div>
+        </div>
+        <div class="form-message-item" style="display: flex;align-items: left;margin-bottom: 10px;">
+            <label style="width: 25%;">个人简介：</label>
+            <div style="width: 70%;">{{formInfo.al_introduction}}</div>
+        </div>
+    </div>
+    <!--<div v-if="getUrlParam('al_status')==0" class="form-button" v-on:click="checkApplicant" :id="0">-->
+        <!--<div>通过审核</div>-->
+    <!--</div>-->
+    <!--<div v-if="getUrlParam('al_status')==0" class="form-button" v-on:click="checkApplicant" :id="1">-->
+        <!--<div style="width: 75px;">不通过审核</div>-->
+    <!--</div>-->
+    <div v-if="true" class="form-button" v-on:click="checkApplicant">
+        <div style="width: 75px;">由TA领养</div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../lib/jquery-2.1.4.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: "#proposer",
+        data: {
+            al_id: "",
+            formInfo: {},
+            button: 1,
+        },
+        methods: {
+            getMemberInfo:function () {
+                var that = this;
+                $.ajax({
+                    type: "post",
+                    url: host + "customer/cat/getAdopterInfo",
+                    data: {
+                        m_id: getCookie("m_id"),
+                        al_id: that.al_id
+                    },
+                    cache: false,
+                    async: false,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if(res){
+                            that.formInfo = res;
+                        }else{
+                            $.alert("未获取该用户信息")
+                        }
+                    }
+                })
+            },
+            checkApplicant: function (e) {
+                var that = this;
+                $.confirm("（一经确认，不可更改）","请问您是否确认TA为喵咪的最终领养者？",function () {
+                    if(that.button == 1){
+                        that.button = 0;
+                        if(getUrlParam("al_id")){
+                            that.al_id = getUrlParam("al_id");
+                            $(".form-button").attr("disabled","");
+                            $.ajax({
+                                type: "post",
+                                url: host + "customer/cat/checkApplicant",
+                                data: {
+                                    al_id: that.al_id,
+                                    label: 0,
+                                    m_id: getCookie("m_id"),
+                                },
+                                cache: false,
+                                async: false,
+                                dataType: "JSON",
+                                success: function (res) {
+                                    if(!res.errorCode){
+                                        $.toast("审核成功");
+                                        setTimeout(function () {
+                                            window.location.href = '../publish/mypublish.html';
+                                        },1000)
+                                    }else{
+                                        $.alert(res.errorCode)
+                                        that.button = 1;
+                                    }
+                                }
+                            })
+                        }else{
+                            $.alert("未获取该用户信息");
+                        }
+                    }
+                })
+
+            }
+        }
+    })
+
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        if(getCookie("m_id")){
+            if(getUrlParam("al_id")){
+                app.al_id = getUrlParam("al_id");
+                setTimeout(function () {
+                    app.getMemberInfo();
+                },800)
+
+            }else{
+                $.alert("未获取该用户信息");
+                setTimeout(function () {
+                    window.history.go(-1);
+                },2000)
+            }
+        }else{
+            $.alert("前往登录页面？", "尚未登录", function () {
+                //点击确认后的回调函数
+                window.location.href = '../my/login.html';
+            });
+        }
+
+    };
+</script>
+</body>
+</html>

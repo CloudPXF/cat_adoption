@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="publish.css">
+    <link rel="stylesheet" href="../js/cropper/cropper.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div id="publish_page" class="publish_page">
+    <div class="publish_input">
+        <label class="input_title">小猫姓名</label>
+        <input onchange="setIntoCookie()" class="input_body" type="text" id="cat_name">
+    </div>
+    <div class="publish_input">
+        <label class="input_title">小猫花色</label>
+        <input onchange="setIntoCookie()" class="input_body" type="text" id="cat_color">
+    </div>
+    <div class="publish_input">
+        <label class="input_title">小猫种类</label>
+        <input onchange="setIntoCookie()" maxlength="5" class="input_body" type="text" id="cat_class">
+    </div>
+    <div class="publish_input">
+        <label for="" class="input_title">小猫性别</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select">
+                <option value="">请选择</option>
+                <option value="0">男生</option>
+                <option value="1">女生</option>
+                <option value="2">其他/未知</option>
+            </select>
+        </div>
+    </div>
+    <div class="publish_input">
+        <label class="input_title">小猫年龄</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select3">
+                <option value="">请选择</option>
+                <option value="1-3月">1-3月</option>
+                <option value="4-12月">4-12月</option>
+                <option value="1-3岁">1-3岁</option>
+                <option value="4-6岁">4-6岁</option>
+                <option value="6岁以上">6岁以上</option>
+                <option value="未知">未知</option>
+            </select>
+        </div>
+    </div>
+    <div class="publish_input">
+        <label class="input_title">小猫所在地</label>
+        <input onchange="setIntoCookie()" class="input_body" type="text" id="cat_place">
+    </div>
+    <div class="publish_input">
+        <label class="input_title">小猫来源</label>
+        <input onchange="setIntoCookie()" class="input_body" type="text" id="cat_from">
+    </div>
+    <div class="publish_input">
+        <label for="" class="input_title">健康状况</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select0">
+                <option value="">请选择</option>
+                <option value="1">健康</option>
+                <option value="0">伤病</option>
+            </select>
+        </div>
+    </div>
+    <div class="publish_input">
+        <label for="" class="input_title">是否免疫</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select1">
+                <option value="">请选择</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="publish_input">
+        <label for="" class="input_title">是否绝育</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select2">
+                <option value="">请选择</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="publish_input">
+        <label for="" class="input_title"
+               style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap">显示联系方式</label>
+        <div class="input_body">
+            <select disabled onchange="setIntoCookie(1)" class="weui-select" id="select4">
+                <option value="">请选择</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </div>
+        <div onclick="showLayer()"
+             style="height: 20px;width: 20px;border:1.5px solid;border-color: rgba(119,175,156,1);border-radius: 50%;display: flex;align-items: center;position: relative;left: 30px;">
+            <div style="margin-left: auto;margin-right: auto;color: rgba(119,175,156,1)">?</div>
+        </div>
+    </div>
+    <div style="display: none" id="chooseCaller" class="publish_input">
+        <label for="" class="input_title"
+               style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap">联系方式</label>
+        <div class="input_body">
+            <select onchange="setIntoCookie()" class="weui-select" id="select5">
+                <option value="">请选择</option>
+                <option value="0">手机</option>
+                <option value="1">微信号</option>
+                <option value="2">QQ号</option>
+            </select>
+        </div>
+    </div>
+    <div onclick="showLayer()" style="display: none;" id="inputCaller" class="publish_input">
+        <label for="" class="input_title" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap"></label>
+        <div class="input_body" style="margin-left: auto;margin-right: 15px;">
+            <input onchange="setIntoCookie()" class="input_body" type="text" id="cat_owner_show_phone"
+                   style="width: 100%;height: 100%;">
+        </div>
+    </div>
+    <div class="publish_textarea">
+        <label class="textarea_title">领养要求</label>
+        <textarea onchange="setIntoCookie()" id="cat_requirement" class="textarea_body"
+                  placeholder="越详细越容易通过审核哦！"></textarea>
+    </div>
+    <div class="publish_textarea">
+        <label class="textarea_title">小猫介绍</label>
+        <textarea onchange="setIntoCookie()" id="cat_introduction" class="textarea_body"
+                  placeholder="越详细越容易通过审核哦！"></textarea>
+    </div>
+    <div class="publish_upload">
+        <label class="upload_title">上传封面照片：</label>
+        <div class="weui-gallery" id="gallery">
+            <span class="weui-gallery__img" id="galleryImg"></span>
+            <div class="weui-gallery__opr">
+                <a href="javascript:" class="weui-gallery__del del_0"><i
+                        class="weui-icon-delete weui-icon_gallery-delete"></i></a>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files" id="uploaderFiles"></ul>
+                        <div class="weui-uploader__input-box">
+                            <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*"
+                                   multiple/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="publish_upload">
+        <label class="upload_title">上传其他照片：</label>
+        <div class="weui-gallery" id="gallery1">
+            <span class="weui-gallery__img" id="galleryImg1"></span>
+            <div class="weui-gallery__opr">
+                <a href="javascript:" class="weui-gallery__del del_1"><i
+                        class="weui-icon-delete weui-icon_gallery-delete"></i></a>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files" id="uploaderFiles1"></ul>
+                        <div class="weui-uploader__input-box">
+                            <input id="uploaderInput1" class="weui-uploader__input" type="file" accept="image/*"
+                                   multiple/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;align-items: center">
+        <label for="weuiAgree" class="weui-agree" style="margin-right: 0;padding-right: 0">
+            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+            <span class="weui-agree__text">我已阅读</span>
+        </label>
+        <i style="color: #007aff;font-size: 13px;margin-right: auto;margin-left: 0" onclick="read()">《发布须知》</i>
+    </div>
+
+    <button onclick="publish()" class="publish_button">提交申请</button>
+</div>
+<div id="publish_tips" class="publish_tips">
+    <label class="tips_title">《发布须知》</label>
+    <div class="tips_content">
+        &emsp; &emsp;感谢您使用“熙熙领养猫”进行流浪猫咪信息的发布，您的登记信息将会得到保密，且不会用于其他用途。在填写表单之前，请您仔细阅读以下注意事项：
+        <br> &emsp; &emsp;1. 请务必如实填写表单，必填内容请填写真实情况，其它内容可选填，完善的信息将更有利于猫咪的领养。
+        <br> &emsp; &emsp;2. 在与领养人对接时，不得以任何理由向领养人收取关于猫咪领养的费用（若涉及到猫咪运输或医疗等产生的实际费用，需经双方进行确认同意）。
+        <br> &emsp; &emsp;3. 请填写猫咪的真实信息，不可上传虚假信息，以免在领养过程中引起纠纷。
+        <br> &emsp; &emsp;4. 送养的猫必须要为流浪猫，不能为弃养的家猫，或是由家猫生下的幼猫，我们不接受任何形式的弃养。
+        <br> &emsp; &emsp;最后，祝愿每一只流浪猫都能找到属于自己的家。
+    </div>
+    <button onclick="readed()" class="tips_btn">我已阅读，开始发布</button>
+</div>
+<div id="publish_success" class="publish_success">
+    <!--<img class="success_icon" src="../images/cat_icon.png">-->
+    <label class="success_title">恭喜你已申请成功！</label>
+    <div class="success_content">
+        申请表将提交至熙熙团队处进行审核，申请结果将在审核完成后通知您！请注意查收您的邮箱以及首页的“消息通知”。
+    </div>
+</div>
+<div class="crop-containner" style="display: none">
+    <div class="crop-containner-img">
+        <div>
+            <img id="crop" src="" alt="Picture">
+        </div>
+    </div>
+    <div class="crop-button" id="cropBtn" style="bottom: 60px;">确&emsp;&emsp;&emsp;&emsp;认</div>
+    <div class="crop-button" id="cropBtn_cancel">取&emsp;&emsp;&emsp;&emsp;消</div>
+</div>
+<div class="crop-containner" style="display: none">
+    <div class="crop-containner-img">
+        <div>
+            <img id="crop_1" src="" alt="Picture">
+        </div>
+    </div>
+    <div class="crop-button" id="cropBtn_1" style="bottom: 60px;">确&emsp;&emsp;&emsp;&emsp;认</div>
+    <div class="crop-button" id="cropBtn_cancel_1">取&emsp;&emsp;&emsp;&emsp;消</div>
+</div>
+<div style="display: none" class="layer">
+    <div class="layer-bg"></div>
+    <div class="layer-content">
+        <img onclick="hideLayer()" class="layer-content-close" src="../images/Close.png">
+        <div class="layer-content-title">
+            提示
+        </div>
+        <div class="layer-content-text">
+            若选择“是”，您所填写的联系方式将直接公布在猫咪的详情页面中;若选择"否"，则需在填写领养申请表后才能查看您的联系方式（联系方式为您在注册时所预留的手机号）。
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<!--<script src="../lib/jquery-2.1.4.js"></script>-->
+<script src='https://code.jquery.com/jquery-3.1.1.min.js'></script>
+<script src="../js/cropper/cropper.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../js/jquery-weui.js"></script>
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    var m_id = getCookie("m_id"); //用户id
+    var ifShowLayer = false;
+    //选择图片
+    var pictures = [];
+    $(function () {
+        var $image = document.getElementById("crop");
+        var Cropper = window.Cropper;
+        var cropper;
+
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery"),
+            $galleryImg = $("#galleryImg"),
+            $uploaderInput = $("#uploaderInput"),
+            $uploaderFiles = $("#uploaderFiles");
+        $uploaderInput.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                files = e.target.files;
+            //for (var i = 0, len = files.length; i < len; ++i) {
+            var file = files[0];
+            pictures[0] = file; // 把选择的文件对象放进pictures数组储存以上传
+            if (url) {
+                src = url.createObjectURL(file);
+            } else {
+                src = e.target.result;
+            }
+            //图片裁剪
+            $(".crop-containner")[0].setAttribute("style", "");
+            $("#crop").attr("src", src);
+            cropper = new Cropper($image, {
+                aspectRatio: 1 / 1,　　// 比例进行裁剪，可以是任意比例，自己调整
+                crop: function (e) {
+                    // Output the result data for cropping image.
+                    // console.log(e.detail.x);
+                    // console.log(e.detail.y);
+                    // console.log(e.detail.width);
+                    // console.log(e.detail.height);
+                    // console.log(e.detail.rotate);
+                    // console.log(e.detail.scaleX);
+                    // console.log(e.detail.scaleY);
+                    console.log("ready")
+                }
+            })
+            //确定裁剪
+            $("#cropBtn").on("click", function () {
+                $.showLoading("请稍等")
+                cropper.getCroppedCanvas().toBlob(function (result) {                //将裁剪部分转成blob类型
+                    document.getElementById('uploaderFiles').innerHTML = "";
+                    document.getElementsByClassName('weui-uploader__input-box')[0].setAttribute("style", "display:none");//取消显示加号按钮
+                    $uploaderFiles.append($(tmpl.replace('#url#', cropper.getCroppedCanvas().toDataURL())));//将该图片加入列表
+                    //console.log(result);
+                    pictures[0] = result;//将该blob类型文件加入数组
+                    $(".crop-containner")[0].setAttribute("style", "display:none");//取消显示截图页面
+                    $("#crop").attr("src", "");
+                    $.hideLoading();
+                    setTimeout(function () {
+                        cropper.destroy();//摧毁该croppre对象
+                    }, 1000)
+
+                }, "image/jpeg")
+            })
+            //取消裁剪
+            $("#cropBtn_cancel").on("click", function () {
+                $(".crop-containner")[0].setAttribute("style", "display:none");
+                $("#crop").attr("src", "");
+                pictures[0] = "";
+                cropper.destroy();
+            })
+            //}
+        });
+        var index; //第几张图片
+        //预览图片
+        $uploaderFiles.on("click", "li", function () {
+            index = $(this).index();
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function () {
+            $gallery.fadeOut(100);
+        });
+        //删除图片
+        $(".del_0").click(function () {
+            //console.log('删除');
+            $uploaderFiles.find("li").eq(index).remove();
+            document.getElementsByClassName('weui-uploader__input-box')[0].setAttribute("style", "");
+            pictures.splice(index, 1);
+        });
+
+    });
+    //选择图片
+    var pictures1 = [];
+    $(function () {
+        var $image = document.getElementById("crop_1");
+        var Cropper = window.Cropper;
+        var cropper;
+
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery1 = $("#gallery1"),
+            $galleryImg1 = $("#galleryImg1"),
+            $uploaderInput1 = $("#uploaderInput1"),
+            $uploaderFiles1 = $("#uploaderFiles1");
+        $uploaderInput1.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                files = e.target.files;
+            //for (var i = 0, len = files.length; i < len; ++i) {
+            var file = files[files.length - 1];
+            //pictures1.push(file); // 把选择的文件对象放进pictures数组储存以上传
+            if (url) {
+                src = url.createObjectURL(file);
+            } else {
+                src = e.target.result;
+            }
+            //$uploaderFiles.append($(tmpl.replace('#url#', src)));
+            //}
+            //图片裁剪
+            $(".crop-containner")[1].setAttribute("style", "");
+            $("#crop_1").attr("src", src);
+            cropper = new Cropper($image, {
+                aspectRatio: 3 / 2,　　// 比例进行裁剪，可以是任意比例，自己调整
+                crop: function (e) {
+                    // Output the result data for cropping image.
+                    // console.log(e.detail.x);
+                    // console.log(e.detail.y);
+                    // console.log(e.detail.width);
+                    // console.log(e.detail.height);
+                    // console.log(e.detail.rotate);
+                    // console.log(e.detail.scaleX);
+                    // console.log(e.detail.scaleY);
+                    console.log("ready1")
+                }
+            })
+            //确定裁剪
+            $("#cropBtn_1").one("click", function () {
+                $.showLoading("请稍等");
+                document.getElementById("cropBtn_1").setAttribute("disabled", "");
+                cropper.getCroppedCanvas().toBlob(function (result) {//将裁剪部分转成blob类型
+                    //document.getElementById('uploaderFiles1').innerHTML = "";
+                    //document.getElementsByClassName
+                    // ('weui-uploader__input-box')[1].setAttribute("style", "display:none");//取消显示加号按钮
+                    $uploaderFiles1.append($(tmpl.replace('#url#', cropper.getCroppedCanvas().toDataURL())));//将该图片加入列表
+                    //console.log(result);
+                    pictures1.push(result);//将该blob类型文件加入数组
+                    $(".crop-containner")[1].setAttribute("style", "display:none");//取消显示截图页面
+                    $("#crop_1").attr("src", "");
+                    $.hideLoading();
+                    setTimeout(function () {
+                        cropper.destroy();//摧毁该croppre对象
+                    }, 1000)
+                    if (pictures1.length >= 3) {
+                        document.getElementsByClassName('weui-uploader__input-box')[1].setAttribute("style", "display:none");//取消显示加号按钮
+                    }
+                }, "image/jpeg")
+            })
+            //取消裁剪
+            $("#cropBtn_cancel_1").on("click", function () {
+                $(".crop-containner")[1].setAttribute("style", "display:none");
+                $("#crop_1").attr("src", "");
+                //pictures1[0] = "";
+                cropper.destroy();
+            })
+
+        });
+        var index; //第几张图片
+        $uploaderFiles1.on("click", "li", function () {
+            index = $(this).index();
+            $galleryImg1.attr("style", this.getAttribute("style"));
+            $gallery1.fadeIn(100);
+        });
+        $gallery1.on("click", function () {
+            $gallery1.fadeOut(100);
+        });
+        //删除图片
+        $(".del_1").click(function () {
+            //console.log('删除');
+            $uploaderFiles1.find("li").eq(index).remove();
+            pictures1.splice(index, 1);
+            console.log(pictures1);
+            if (pictures.length < 3) {
+                document.getElementsByClassName('weui-uploader__input-box')[1].setAttribute("style", "");//显示加号按钮
+            }
+        });
+    });
+    //地址选择器
+    $("#cat_place").cityPicker({
+        title: "请选择所在地",
+        showDistrict: false
+    });
+
+    //提交申请
+    function publish() {
+        if (!getCookie("m_id")) {
+            $.alert("前往登录页面？", "尚未登录", function () {
+                //点击确认后的回调函数
+                window.location.href = '../my/login.html';
+            });
+        } else {
+            var src = "customer/cat/releaseCatCard"
+            if (getUrlParam("edit") == 1) {
+                src = "customer/cat/editCatInfo"
+            }
+            var cat_name = $('#cat_name').val();
+            var cat_color = $('#cat_color').val();
+            var cat_class = $('#cat_class').val();
+            var cat_sex = $('#select option:selected').val();
+            var cat_age = $('#select3 option:selected').val();
+            var cat_place = $('#cat_place').val();
+            var cat_from = $('#cat_from').val();
+            var cat_health = $('#select0 option:selected').val();
+            var cat_immunization = $('#select1 option:selected').val();
+            var cat_sterilization = $('#select2 option:selected').val();
+            var cat_requirement = $('#cat_requirement').val();
+            var cat_introduction = $('#cat_introduction').val();
+            var checkbox = document.getElementById('weuiAgree');
+
+
+            if (checkbox.checked) {
+                var a_class = '0';
+            } else {
+                var a_class = '1';
+            }
+            if (!cat_name) {
+                $.toptip('请输入小猫姓名！');
+            } else if (!cat_color) {
+                $.toptip('请输入小猫花色！');
+            } else if (!cat_class) {
+                $.toptip('请输入小猫种类！');
+            } else if (!cat_age) {
+                $.toptip('请输入小猫年龄！');
+            } else if (!cat_place) {
+                $.toptip('请输入小猫所在地！');
+            } else if (!cat_from) {
+                $.toptip('请输入小猫来源！');
+            } else if (!cat_introduction) {
+                $.toptip('请输入小猫介绍！');
+            } else if (!cat_requirement) {
+                $.toptip('请输入领养要求！');
+            } else if ($("#uploaderFiles li").length > 1) {
+                $.toptip('最多上传1张封面照片！');
+            } else if (pictures.length == 0) {
+                $.toptip('请上传封面图！');
+            } else if ($("#uploaderFiles1 li").length > 3) {
+                $.toptip('最多上传3张其他照片！');
+            } else if (pictures1.length == 0) {
+                $.toptip('请上传其他图片！');
+            } else if (a_class == '1') {
+                $.toptip('请先同意《发布须知》！');
+            } else if (cat_sex == "") {
+                $.toptip('请选择小猫性别！');
+            } else if (cat_health == "") {
+                $.toptip('请选择小猫健康状况！');
+            } else if (cat_immunization == "") {
+                $.toptip('请选择小猫是否免疫！');
+            } else if (cat_sterilization == "") {
+                $.toptip('请选择小猫是否绝育！');
+            } else {
+                $(".publish_button")[0].setAttribute('disabled', '');
+                var formData = new FormData();
+                formData.append('cm_id', getCookie("m_id"));
+                formData.append('c_name', cat_name);
+                formData.append('c_color', cat_color);
+                formData.append('c_class', cat_class);
+                formData.append('c_sex', cat_sex);
+                formData.append('c_age', cat_age);
+                formData.append('c_place', cat_place);
+                formData.append('c_from', cat_from);
+                formData.append('c_health', cat_health);
+                formData.append('c_immunization', cat_immunization);
+                formData.append('c_sterilization', cat_sterilization);
+                formData.append('c_requirement', cat_requirement);
+                formData.append('c_introduction', cat_introduction);
+                formData.append('c_cover', pictures[0]);
+                if (getUrlParam("edit")) {
+                    formData.append('c_id', getUrlParam("c_id"))
+                }
+                for (var i = 0; i < pictures1.length; i++) {
+                    formData.append('c_img[]', pictures1[i]);
+                }
+                $.showLoading("请稍等")
+                $.ajax({
+                    type: 'POST',
+                    url: host + src,
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    mimeType: "multipart/form-data",
+                    success: function (data) {
+                        var data = JSON.parse(data);
+                        //console.log(data.errorCode);
+                        if (!data.errorCode) {
+                            $('#publish_page').css('display', 'none');
+                            $('#publish_success').css('display', 'flex');
+                            clearInterval();
+                            setCookie("catMessage", "");
+                            setTimeout(function () {
+                                window.location.href = 'mypublish.html';
+                            }, 3000);
+                        } else {
+                            $.alert("发布失败")
+                        }
+                        $.hideLoading();
+                    }
+                });
+            }
+        }
+
+    }
+
+    function readed() {
+        $('#publish_tips').css('display', 'none');
+        $('#publish_page').css('display', 'flex');
+    }
+
+    function read() {
+        $('#publish_tips').css('display', 'flex');
+        $('#publish_page').css('display', 'none');
+    }
+
+    /**
+     * 检查是否是修改信息并做出回填动作
+     */
+    function checkEdit(c_id) {
+        readed();
+        $("#weuiAgree").attr("checked", "true");
+        $.ajax({
+            type: "post",
+            url: host + 'customer/cat/getCatCardInfo',
+            data: {c_id: c_id},
+            cache: false,
+            async: false,
+            dataType: "JSON",
+            success: function (res) {
+                var cat = res.cat;
+                //that.swiper = JSON.parse(res.cat.c_img);
+                //console.log(that.swiper)
+                $("#cat_name").val(cat.c_name);
+                $("#cat_color").val(cat.c_color);
+                $("#cat_class").val(cat.c_class);
+                $("#select").val(cat.c_sex);
+                $("#select3").val(cat.c_age);
+                $("#cat_place").val(cat.c_place);
+                $("#cat_from").val(cat.c_from);
+                $("#select0").val(cat.c_health);
+                $("#select1").val(cat.c_immunization);
+                $("#select2").val(cat.c_sterilization);
+                $("#cat_requirement").val(cat.c_requirement);
+                $("#cat_introduction").val(cat.c_introduction);
+
+
+                //封面图回填
+                pictures.push(cat.c_cover);
+                document.getElementById('uploaderFiles').innerHTML = "";
+                document.getElementsByClassName('weui-uploader__input-box')[0].setAttribute("style", "display:none");//取消显示加号按钮
+                var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                    $gallery = $("#gallery"),
+                    $galleryImg = $("#galleryImg"),
+                    $uploaderInput = $("#uploaderInput"),
+                    $uploaderFiles = $("#uploaderFiles");
+                $uploaderFiles.append($(tmpl.replace('#url#', host + cat.c_cover)));//将该图片加入列表
+
+                //轮播图回填
+                var tmpl1 = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                    $gallery1 = $("#gallery1"),
+                    $galleryImg1 = $("#galleryImg1"),
+                    $uploaderInput1 = $("#uploaderInput1"),
+                    $uploaderFiles1 = $("#uploaderFiles1");
+                cat.c_img = JSON.parse(cat.c_img)
+                for (var i = 0; i < cat.c_img.length; i++) {
+                    pictures1.push(cat.c_img[i]);
+                    $uploaderFiles1.append($(tmpl1.replace('#url#', host + cat.c_img[i])));//将该图片加入列表
+                }
+            },
+            error: function (res) {
+                alert(res)
+            }
+        })
+    }
+
+    //写入cookie
+    function setIntoCookie(e) {
+        if (e == 1) {
+            if ($("#select4").val() == 1) {
+                $("#chooseCaller").css("display", "");
+                $("#inputCaller").css("display", "");
+            } else {
+                $("#select5").val("");
+                $("#cat_owner_show_phone").val("");
+                $("#chooseCaller").css("display", "none");
+                $("#inputCaller").css("display", "none");
+            }
+        }
+        var cat = {};
+        cat.c_name = $("#cat_name").val();
+        cat.c_color = $("#cat_color").val();
+        cat.c_class = $("#cat_class").val();
+        cat.c_sex = $("#select").val();
+        cat.c_age = $("#select3").val();
+        cat.c_place = $("#cat_place").val();
+        cat.c_from = $("#cat_from").val();
+        cat.c_health = $("#select0").val();
+        cat.c_immunization = $("#select1").val();
+        cat.c_sterilization = $("#select2").val();
+        cat.c_requirement = $("#cat_requirement").val();
+        cat.c_introduction = $("#cat_introduction").val();
+
+
+        //cat.c_showPhone = $("#select4").val();
+        setCookie("catMessage", encodeUnicode(JSON.stringify(cat)));
+        ///alert(JSON.stringify(cat));
+    }
+
+    //回填信息
+    function setCatMessage() {
+        if (getCookie("catMessage")) {
+            var cat = JSON.parse(decodeUnicode(getCookie("catMessage")));
+            $("#cat_name").val(cat.c_name);
+            $("#cat_color").val(cat.c_color);
+            $("#cat_class").val(cat.c_class);
+            $("#select").val(cat.c_sex);
+            $("#select3").val(cat.c_age);
+            $("#cat_place").val(cat.c_place);
+            $("#cat_from").val(cat.c_from);
+            $("#select0").val(cat.c_health);
+            $("#select1").val(cat.c_immunization);
+            $("#select2").val(cat.c_sterilization);
+            $("#cat_requirement").val(cat.c_requirement);
+            $("#cat_introduction").val(cat.c_introduction);
+            //alert("回填成功")
+        }
+    }
+
+    //layer
+    function hideLayer() {
+        $(".layer").css("display", "none");
+        document.getElementById("select4").removeAttribute("disabled")
+    }
+
+    function showLayer() {
+        $(".layer").css("display", "");
+    }
+</script>
+<script>
+    window.onload = function (ev) {
+        if (getCookie("m_id") == "") {
+            $.alert("前往登录页面？", "尚未登录", function () {
+                //点击确认后的回调函数
+                window.location.href = '../my/login.html';
+            });
+        } else {
+            if (getUrlParam("edit") == 1) {
+                checkEdit(getUrlParam("c_id"));
+            } else if (getCookie("catMessage")) {
+                //alert(getCookie("m_id"));
+                setCatMessage();
+                // setTimeout(function(){
+                //     setInterval(function(){
+                //         //setIntoCookie();
+                //     },500)
+                // },1000)
+            } else {
+                //alert("???"+getCookie("catMessage"))
+                // setInterval(function(){
+                //     //setIntoCookie();
+                //     //console.log("保存中")
+                // },500)
+            }
+            showLayer();
+            hideLayer();
+            $("#select4").one("click",function () {
+                showLayer();
+                ifShowLayer = true;
+            })
+        }
+    }
+</script>
+</body>
+
+</html>

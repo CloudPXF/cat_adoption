@@ -1,0 +1,177 @@
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="accuse.css">
+</head>
+<body>
+<div class="accuse-page" id="accuse-page">
+    <div style="margin-top: 15px;">
+        <div class="publish_textarea">
+            <label class="textarea_title">举报理由</label>
+            <textarea v-on:input="inputMessage" id="introduction" class="textarea_body" placeholder="请详细描述举报理由。"></textarea>
+        </div>
+        <div class="publish_upload">
+            <label class="upload_title">上传证据照片：</label>
+            <div class="weui-gallery" id="gallery">
+                <span class="weui-gallery__img" id="galleryImg"></span>
+                <div class="weui-gallery__opr">
+                    <a href="javascript:" class="weui-gallery__del"><i class="weui-icon-delete weui-icon_gallery-delete"></i></a>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-uploader">
+                        <div class="weui-uploader__bd">
+                            <ul class="weui-uploader__files" id="uploaderFiles"></ul>
+                            <div class="weui-uploader__input-box">
+                                <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button v-on:click="accuse" class="publish_button">提交举报申请</button>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--轮播图-->
+<script src="../js/swiper.min.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    var pictures = [];
+    $(function() {
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery"),
+            $galleryImg = $("#galleryImg"),
+            $uploaderInput = $("#uploaderInput"),
+            $uploaderFiles = $("#uploaderFiles");
+        $uploaderInput.on("change", function(e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                files = e.target.files;
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+                pictures.push(file); // 把选择的文件对象放进pictures数组储存以上传
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                $uploaderFiles.append($(tmpl.replace('#url#', src)));
+            }
+        });
+        var index; //第几张图片
+        $uploaderFiles.on("click", "li", function() {
+            index = $(this).index();
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function() {
+            $gallery.fadeOut(100);
+        });
+        //删除图片
+        $(".weui-gallery__del").click(function() {
+            //console.log('删除');
+            $uploaderFiles.find("li").eq(index).remove();
+            pictures.splice(index, 1);
+        });
+    });
+    var app = new Vue({
+        el: "#accuse-page",
+        data: {
+            textarea: "",
+            m_id: "",
+            rm_target: "",
+            rc_id: "",
+            r_type: "",
+        },
+        methods: {
+            inputMessage: function (e) {
+                this.textarea = e.target.value;
+            },
+            accuse: function (e) {
+                var that = this;
+                if(getCookie("m_id")){
+                    that.rc_id = getUrlParam("c_id");
+                    that.rm_target = getUrlParam("rm_target");
+                    that.r_type = getUrlParam("r_type");
+                    that.m_id = getCookie("m_id");
+                    var formdata = new FormData();
+                    formdata.append("r_type",that.r_type);
+                    formdata.append("rm_id",that.m_id);
+                    formdata.append("rm_target",that.rm_target);
+                    formdata.append("rc_id",that.rc_id);
+                    formdata.append("r_reason",that.textarea);
+                    for(var i = 0; i < pictures.length; i++){
+                        formdata.append("r_img[]",pictures[i]);
+                    }
+                    $.showLoading("请稍等");
+                    setTimeout(function () {
+                        // if(formdata.get("r_img[]")){
+                        //     alert("有图片呀");
+                        //     console.log(formdata.get("r_img[]"))
+                        // }
+                        $.ajax({
+                            type: 'POST',
+                            url: host+"customer/report/reportCat",
+                            data: formdata,
+                            contentType: false,
+                            processData: false,
+                            mimeType: "multipart/form-data",
+                            success: function (res) {
+                                //alert(JSON.parse(res).errorCode)
+                                if(JSON.parse(res).errorCode == 0){
+                                    $.alert("举报成功");
+                                    setTimeout(function () {
+                                        window.history.go(-1);
+                                    },1500)
+                                }else{
+                                    $.alert("错误："+res);
+                                }
+                                $.hideLoading();
+                            },
+                            fail: function (res) {
+                                alert(res);
+                            }
+                        })
+                    },1000)
+
+                }else{
+                    $.alert("未获取个人信息")
+                }
+            }
+        }
+    })
+</script>
+
+<script>
+    window.onload = function (ev) {
+        if(getCookie("m_id")){
+            app.m_id = getCookie("m_id");
+        }else{
+            $.alert("前往登录页面？", "尚未登录", function() {
+                //点击确认后的回调函数
+                window.location.href = '../my/login.html';
+            });
+        }
+    }
+</script>
+</body>
+</html>

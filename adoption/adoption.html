@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="adoption.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="adoption_page" v-cloak id="adoption_page">
+    <div class="adoption_navbar">
+        <div v-on:click="changeTab(0)" class="nav-item nav-item-on" style="border-right: 1px solid; border-color: rgba(0,0,0,0.1);">
+            <div><img :src="tab==0 ? '../images/time_on.png':'../images/time.png'" width="27"></div>
+            <div class="nav-item-text">发布时间</div>
+        </div>
+        <div v-on:click="changeTab(1)" class="nav-item" style="border-right: 1px solid;border-color: rgba(0,0,0,0.1);">
+            <div><img :src="tab==1 ? '../images/like_on.png':'../images/like.png'" width="27"></div>
+            <div class="nav-item-text" style="color:rgba(40,89,67,1)">喜欢数</div>
+        </div>
+        <div v-on:click="changeTab(2)" class="nav-item">
+            <div><img :src="tab==2 ? '../images/age_on.png':'../images/age.png'" width="27"></div>
+            <div class="nav-item-text" style="color: rgba(40,89,67,1)">年龄</div>
+        </div>
+    </div>
+    <div v-if="showAgeList" class="age-list">
+        <div v-on:click="getCatListByAge" data-label="1" :style="ageLabel==1 ? 'background: #cccccc' : ''" class="age-item">1-3月</div>
+        <div v-on:click="getCatListByAge" data-label="2" :style="ageLabel==2 ? 'background: #cccccc' : ''" class="age-item">4-12月</div>
+        <div v-on:click="getCatListByAge" data-label="3" :style="ageLabel==3 ? 'background: #cccccc' : ''" class="age-item">1-3岁</div>
+        <div v-on:click="getCatListByAge" data-label="4" :style="ageLabel==4 ? 'background: #cccccc' : ''" class="age-item">4-6岁</div>
+        <div v-on:click="getCatListByAge" data-label="5" :style="ageLabel==5 ? 'background: #cccccc' : ''" class="age-item">6岁以上</div>
+        <div v-on:click="getCatListByAge" data-label="6" :style="ageLabel==6 ? 'background: #cccccc' : ''" class="age-item">未知</div>
+    </div>
+    <div class="adoption-list">
+        <div v-for="item in cats" :id="item.c_id" v-on:click="todetail" class="adoption-item">
+            <div class="adoption-item-img">
+                <img :src="host+item.c_cover" width="135" style="width: 135px;height: 103px;">
+            </div>
+            <div class="adoption-item-message">
+                <div class="adoption-item-message-name">
+                    {{item.c_name}}
+                </div>
+                <div class="adoption-item-message-detail" >
+                    <div>种类:  {{item.c_class}}</div>
+                    <div v-if="item.c_sex==0">性别:  男生</div>
+                    <div v-else-if="item.c_sex==1">性别:  女生</div>
+                    <div v-else-if="item.c_sex==2">性别:  未知</div>
+                    <div>健康状态:  {{item.c_health==1?"健康":"伤病"}}</div>
+                    <div style="width:110px;height:20px;overflow: hidden;">地点:  {{item.c_place}}</div>
+                </div>
+            </div>
+            <div class="adoption-item-status">
+                <div class="adoption-item-status-img" :style="item.c_status == 5 ? 'background:rgba(215,215,215,1)' : 'background:rgba(119,175,156,1);'">
+                    <div style="color: #ffffff;">{{item.c_status == 5 ? "已领养" : "未领养"}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="!nomore" class="weui-loadmore">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <div v-else class="weui-loadmore weui-loadmore_line">
+        <span class="weui-loadmore__tips">暂无数据</span>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: '#adoption_page',
+        data: {
+            cats: [],
+            tab: 0,
+            nomore: false,
+            loading: false,
+            page: 1,
+            showAgeList: false,
+            ageLabel: "",
+        },
+        methods: {
+            //得到喵咪列表
+            getCatList: function (label) {
+               var that = this;
+               $.ajax({
+                   type: "get",
+                   url: host + 'customer/cat/getCatCardListByPage',
+                   data: {label: label,page: that.page},
+                   cache: false,
+                   async: false,
+                   dataType: "JSON" ,
+                   success: function (res) {
+                       //alert(res);
+                       //console.log(res);
+                       that.cats = that.cats.concat(res.catList);
+                       that.page = res.page;
+                       if(res.catList.length == 0){
+                           that.nomore = true;
+                           $(document.body).destroyInfinite();
+                       }
+                   },
+               })
+            },
+            getCatListByAge: function (e) {
+                var that = this;
+                var label = "";
+                if(e.currentTarget.dataset.label){
+                    label = e.currentTarget.dataset.label;
+                    that.ageLabel = label;
+                    that.page = 1;
+                    that.showAgeList = false;
+                    that.cats = [];
+                }else{
+                    label = that.ageLabel;
+                }
+                $.ajax({
+                    type: "get",
+                    url: host + 'customer/cat/getCatCardListByPage',
+                    data: {
+                        label: 2,
+                        age_label: label,
+                        page: that.page
+                    },
+                    cache: false,
+                    async: false,
+                    dataType: "JSON" ,
+                    success: function (res) {
+                        //alert(res);
+                        //console.log(res);
+                        that.cats = that.cats.concat(res.catList);
+                        that.page = res.page;
+                        if(res.catList.length == 0){
+                            that.nomore = true;
+                            $(document.body).destroyInfinite();
+                        }
+                    },
+                })
+            },
+            //详情
+            todetail: function (e) {
+                var that = this;
+                //console.log(e.currentTarget)
+                if(e.currentTarget.id){
+                    window.location.href = '../detail/detail.html?c_id=' + e.currentTarget.id;
+                }else{
+                    $.alert("未获取喵咪信息")
+                }
+
+            },
+            //切换
+            changeTab: function (nav) {
+                for(var i = 0;i < 3;i++){
+                    $(".nav-item")[i].setAttribute("class","nav-item");
+                    $(".nav-item-text")[i].setAttribute("style","color: rgba(40,89,67,1)");
+                }
+                $(".nav-item")[nav].setAttribute("class","nav-item nav-item-on");
+                $(".nav-item-text")[nav].setAttribute("style","color: #ffffff");
+                if(nav == 2){
+                    this.tab = nav;
+                    app.showAgeList = !app.showAgeList;
+                }else{
+                    app.showAgeList = false;
+                    this.tab = nav;
+                    this.page = 1;
+                    this.cats = [];
+                    this.ageLabel = "";
+                    this.getCatList(nav);
+                }
+            }
+        }
+    })
+    //分页
+    $(function () {
+        $(document.body).infinite().on("infinite", function() {
+            if(app.loading) return;
+            app.loading = true;
+            setTimeout(function() {
+                if(app.tab == 2){
+                    var e = {
+                        currentTarget: {
+                            dataset: {
+                                label: ""
+                            }
+                        }
+                    };
+                    e.currentTarget.dataset.label = null;
+                    //$.alert("测试中")
+                    app.getCatListByAge(e);
+                }else{
+                    app.getCatList();
+                }
+                app.loading = false;
+                console.log("loading")
+            }, 1500);   //模拟延迟
+        });
+    })
+</script>
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        app.getCatList(0);
+    };
+</script>
+</body>
+
+</html>

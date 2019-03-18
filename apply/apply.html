@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+<div class="apply-page" id="apply-page">
+    <div style="margin-top: 15px;">
+        <div class="publish_input">
+            <label class="input_title">真实姓名</label>
+            <input v-on:input="inputMessage" class="input_body" type="text" id="name">
+        </div>
+        <div class="publish_input">
+            <label for="" class="input_title">家中是否有猫狗</label>
+            <div class="input_body">
+                <select v-on:change="selectMessage" class="weui-select" id="select0">
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+        </div>
+        <div class="publish_input">
+            <label for="" class="input_title">是否有养猫经历</label>
+            <div class="input_body">
+                <select v-on:change="selectMessage" class="weui-select" id="select1">
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+        </div>
+        <div class="publish_input">
+            <label for="" class="input_title">家人是否同意</label>
+            <div class="input_body">
+                <select v-on:change="selectMessage" class="weui-select" id="select4">
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+        </div>
+        <div class="publish_input">
+            <label class="input_title">居住情况</label>
+            <input v-on:input="inputMessage" class="input_body" placeholder="自有住房/个人住房/合租房" type="text"
+                   id="homeCondition">
+        </div>
+        <div class="publish_input">
+            <label class="input_title">家中现住人数</label>
+            <input v-on:input="inputMessage" class="input_body" type="text" id="account">
+        </div>
+        <div class="publish_input">
+            <label for="" class="input_title" style="width: 70%;">是否封网或是否愿意封网</label>
+            <div class="input_body" style="width: 20%;">
+                <select v-on:change="selectMessage" class="weui-select" id="select2">
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div v-on:click="showTip"
+                 style="height: 20px;width: 20px;border:1.5px solid;border-color: rgba(119,175,156,1);border-radius: 50%;display: flex;align-items: center;position: relative;left: 30px;">
+                <div style="margin-left: auto;margin-right: auto;color: rgba(119,175,156,1)">?</div>
+            </div>
+        </div>
+        <div class="publish_input">
+            <label for="" class="input_title">联系方式</label>
+            <div class="input_body">
+                <select v-on:change="selectMessage" class="weui-select" id="select3">
+                    <option value="">请选择</option>
+                    <option value="0">手机</option>
+                    <option value="1">微信号</option>
+                    <option value="2">QQ</option>
+                    <option value="3">邮箱</option>
+                </select>
+            </div>
+        </div>
+        <div class="publish_input">
+            <label class="input_title">填写联系方式</label>
+            <input v-on:input="inputMessage" class="input_body" type="text" id="calling">
+        </div>
+        <div class="publish_textarea">
+            <label class="textarea_title">个人简介</label>
+            <textarea v-on:input="inputMessage" id="introduction" class="textarea_body"
+                      placeholder="越详细越容易通过审核哦！"></textarea>
+        </div>
+        <div :style="al_block==0?'display:none':''" class="publish_upload">
+            <label class="upload_title">上传封网图片：</label>
+            <div class="weui-gallery" id="gallery">
+                <span class="weui-gallery__img" id="galleryImg"></span>
+                <div class="weui-gallery__opr">
+                    <a href="javascript:" class="weui-gallery__del"><i
+                            class="weui-icon-delete weui-icon_gallery-delete"></i></a>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-uploader">
+                        <div class="weui-uploader__bd">
+                            <ul class="weui-uploader__files" id="uploaderFiles"></ul>
+                            <div class="weui-uploader__input-box">
+                                <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*"
+                                       multiple/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div :style="al_feeding_catdog==0?'display:none':''" class="publish_upload">
+            <label class="upload_title">上传现养猫狗照片（选填）：</label>
+            <div class="weui-gallery" id="gallery1">
+                <span class="weui-gallery__img" id="galleryImg1"></span>
+                <div class="weui-gallery__opr">
+                    <a href="javascript:" class="weui-gallery__del"><i
+                            class="weui-icon-delete weui-icon_gallery-delete"></i></a>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-uploader">
+                        <div class="weui-uploader__bd">
+                            <ul class="weui-uploader__files" id="uploaderFiles1"></ul>
+                            <div class="weui-uploader__input-box">
+                                <input id="uploaderInput1" class="weui-uploader__input" type="file" accept="image/*"
+                                       multiple/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;align-items: center">
+            <label for="weuiAgree" class="weui-agree" style="margin-right: 0;padding-right: 0;width: auto;">
+                <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+                <span class="weui-agree__text">我已阅读</span>
+            </label>
+            <i style="color: #007aff;font-size: 13px;margin-right: auto;margin-left: 0" v-on:click="read()">《领养须知》</i>
+        </div>
+        <button v-on:click="adopt()" class="publish_button">提交申请</button>
+    </div>
+    <div class="adoption-knowing" style="display: none">
+        <div class="adoption-knowing-message" style="width: 90%;margin-left: 5%;margin-top: 10vh;height: 480px;overflow-y: scroll">
+            <div class="adoption-knowing-title">
+                为什么要封网？
+                <div v-on:click="unshow" style="position: absolute;right: 5px;top: 5px;"><img src="../images/Close.png" width="20"></div>
+            </div>
+            <div class="adoption-knowing-message-text" v-on:touchstart="touchstart" v-on:touchmove="touchmove"
+                 v-on:touchend="touchend">
+                <div class="adoption-knowing-message-page">
+                    <div>1.猫有着很强的好奇心，对外面的风吹草动比较敏感。假如不进行封网，猫咪很有可能因为看到飞过的小鸟而激动得跑出家门。</div>
+                    <div>2.猫到了发情的季节，就想要出外寻找真爱。假如不封网，猫咪就很容易会因爱离家。</div>
+                    <div>3.猫咪坠楼的消息每年都有，而不封网将增加意外发生的几率！</div>
+                    <div>意外发生后的眼泪换不回失去的一切，因此铲屎官们更要重视起封网的必要性，不能因为自己的懒惰和不以为然，酿成大错！</div>
+                </div>
+                <div class="adoption-knowing-message-page" hidden>
+                    <div>封网示例</div>
+                    <div>
+                        <img src="../images/block.jpg" width="100%">
+                    </div>
+                    <div>
+                        <img src="../images/block_2.jpg" width="100%">
+                    </div>
+                </div>
+            </div>
+            <div class="adoption-knowing-button-view">
+
+            </div>
+        </div>
+        <div style="overflow: hidden;height: 100vh;width: 100vw;" v-on:click="unshow"></div>
+    </div>
+    <div class="adoption-knowing" style="display: none">
+        <div class="adoption-knowing-message">
+            <div class="adoption-knowing-title">
+                《领养须知》
+            </div>
+            <div class="adoption-knowing-message-text" v-on:touchstart="touchstart_1" v-on:touchmove="touchmove_1" v-on:touchend="touchend_1">
+                <div class="adoption-knowing-message-page">
+                    <div>感谢您伸出温暖的手，给流浪的它们一个属于它们的家，它结束的是生活的漂泊，而您，终结的是心灵的流浪。在领养之前，请您仔细阅读以下注意事项：</div>
+                    <div>1.生活稳定，爱猫懂猫。有固定住所，同时需得到同住的家庭成员的认可，并且接受领养前的上门家访。</div>
+                    <div>2.需认真考虑领养猫后所带来的一系列生活上的改变，要对领养的猫咪有足够的心理准备，如是否能接受猫咪的淘气、掉毛等。领养人明确知悉养猫过程中难免会有自身或猫所接触的他人被抓伤咬伤的风险。</div>
+                    <div>3.家里的窗户和阳台必须要安全地封网（网格片/铁丝网），防止猫咪坠落或擅自出走。</div>
+                </div>
+                <div class="adoption-knowing-message-page" hidden>
+                    <div>4.为猫咪提供必需的生活用品和卫生的生活环境，提供健康的饮食，科学喂养，不得虐待。</div>
+                    <div>5.定期为猫咪驱虫免疫，适龄绝育，若有伤病要及时送去医院进行治疗。</div>
+                    <div>6.领养后请与送养人保持联系，并定期向送养人更新猫咪状况。</div>
+                    <div>7.当您领养后遇到困难实在没法继续养猫时，请务必与送养人协商解决，不得自行转送猫咪。</div>
+                </div>
+            </div>
+            <div v-on:click="readed" class="adoption-knowing-button-view">
+                <div class="adoption-knowing-button" style="width: 100%;border-bottom-left-radius:5px;border-bottom-right-radius: 5px;"><div>已阅读</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="publish_success" class="publish_success">
+    <!--<img class="success_icon" src="../images/cat_icon.png">-->
+    <label class="success_title">恭喜你已申请成功！</label>
+    <div class="success_content">
+        您的申请表已成功提交至发布者处，结果将于发布者审核后进行通知，请您注意查看“消息通知”栏处的更新。
+    </div>
+</div>
+
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--轮播图-->
+<script src="../js/swiper.min.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    //选择图片
+    var pictures = [];
+    $(function () {
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery"),
+            $galleryImg = $("#galleryImg"),
+            $uploaderInput = $("#uploaderInput"),
+            $uploaderFiles = $("#uploaderFiles");
+        $uploaderInput.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                files = e.target.files;
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+                pictures.push(file); // 把选择的文件对象放进pictures数组储存以上传
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                $uploaderFiles.append($(tmpl.replace('#url#', src)));
+            }
+        });
+        var index; //第几张图片
+        $uploaderFiles.on("click", "li", function () {
+            index = $(this).index();
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function () {
+            $gallery.fadeOut(100);
+        });
+        //删除图片
+        $(".weui-gallery__del").click(function () {
+            //console.log('删除');
+            $uploaderFiles.find("li").eq(index).remove();
+            pictures.splice(index, 1);
+        });
+    });
+
+    //选择图片
+    var pictures1 = [];
+    $(function () {
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+            $gallery = $("#gallery1"),
+            $galleryImg = $("#galleryImg1"),
+            $uploaderInput = $("#uploaderInput1"),
+            $uploaderFiles = $("#uploaderFiles1");
+        $uploaderInput.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                files = e.target.files;
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+                pictures1.push(file); // 把选择的文件对象放进pictures数组储存以上传
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                $uploaderFiles.append($(tmpl.replace('#url#', src)));
+            }
+        });
+        var index; //第几张图片
+        $uploaderFiles.on("click", "li", function () {
+            index = $(this).index();
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function () {
+            $gallery.fadeOut(100);
+        });
+        //删除图片
+        $(".weui-gallery__del").click(function () {
+            //console.log('删除');
+            $uploaderFiles.find("li").eq(index).remove();
+            pictures1.splice(index, 1);
+        });
+    });
+
+    var app = new Vue({
+        el: "#apply-page",
+        data: {
+            alc_id: "",
+            alm_id: "",
+            al_uname: "",
+            al_feedcat_experience: "",//是否有养猫经历
+            al_feeding_catdog: "", //家中现在是否养猫养狗
+            al_house_condition: "",//房情况：自有住房/个人住房/合租房
+            al_population: "",
+            al_agreement: "",//家人是否同意养猫：0-不同意，1-同意
+            al_block: "",//家中是否已封网：0-否，1-已封网
+            al_contact_type: "",//联系方式：0-手机，1-微信号，2-QQ，3-邮箱
+            al_number: "",
+            al_introduction: "",
+            al_block_imgs: "",
+            al_catdog_imgs: "",
+            checked: false,
+            pageX: "",
+            left: false,
+            right: false
+        },
+        methods: {
+            //领养
+            adopt: function () {
+                var that = this;
+                that.alm_id = getCookie("m_id");
+                var checkbox = document.getElementById('weuiAgree');
+                if (checkbox.checked) {
+                    if (!that.alc_id) {
+                        $.toptip('未获取喵咪信息！');
+                    } else if (!that.alm_id) {
+                        $.toptip('未获取个人信息！');
+                    } else if (!that.al_uname) {
+                        $.toptip('请输入真实姓名！');
+                    } else if (that.al_feedcat_experience == "") {
+                        $.toptip('请选择养猫经验！');
+                    } else if (that.al_feeding_catdog == "") {
+                        $.toptip('请选择是否现有猫狗！');
+                    } else if (!that.al_house_condition) {
+                        $.toptip('请输入居住情况！');
+                    } else if (!that.al_population) {
+                        $.toptip('请输入家中人数！');
+                    } else if (that.al_agreement == "") {
+                        $.toptip('请选择家里人是否同意！');
+                    } else if (!that.al_block) {
+                        $.toptip('请选择家中是否封窗！');
+                    } else if (!that.al_contact_type) {
+                        $.toptip('请选择联系方式！');
+                    } else if (!that.al_number) {
+                        $.toptip('请输入联系方式！');
+                    } else if (!that.al_introduction) {
+                        $.toptip('请输入简介！');
+                    } else if (!pictures && that.al_block == 1) {
+                        $.toptip('请选择封窗图片！');
+                    } else if (!pictures1 && that.al_feeding_catdog == 1) {
+                        $.toptip('请选择家中现有猫狗图片！');
+                    } else if (pictures.length > 3 || pictures1.length > 3) {
+                        $.toptip('最多上传三张图片！');
+                    } else {
+                        $('.publish_button')[0].setAttribute("disabled", "");
+                        var formdata = new FormData();
+                        formdata.append("alc_id", that.alc_id);
+                        formdata.append("alm_id", that.alm_id);
+                        formdata.append("al_uname", that.al_uname);
+                        formdata.append("al_feedcat_experience", that.al_feedcat_experience);
+                        formdata.append("al_feeding_catdog", that.al_feeding_catdog);
+                        formdata.append("al_house_condition", that.al_house_condition);
+                        formdata.append("al_population", that.al_population);
+                        formdata.append("al_agreement", that.al_agreement);
+                        formdata.append("al_block", that.al_block);
+                        formdata.append("al_contact_type", that.al_contact_type);
+                        formdata.append("al_number", that.al_number);
+                        formdata.append("al_introduction", that.al_introduction);
+                        for (var i = 0; i < pictures.length; i++) {
+                            formdata.append('al_block_imgs[]', pictures[i]);
+                        }
+                        for (var i = 0; i < pictures1.length; i++) {
+                            formdata.append('al_catdog_imgs[]', pictures1[i]);
+                        }
+                        $.ajax({
+                            type: 'POST',
+                            url: host + "customer/cat/applyCat",
+                            data: formdata,
+                            contentType: false,
+                            processData: false,
+                            mimeType: "multipart/form-data",
+                            success: function (data) {
+                                // var data = JSON.parse(data);
+                                //console.log(data.errorCode);
+                                console.log(data)
+                                if (!data.errorCode) {
+                                    $('#apply-page').css('display', 'none');
+                                    $('#publish_success').css('display', 'flex');
+                                    $.alert("请尽量以短信形式联系发布者噢~","温馨提示",function () {
+                                        window.location.href = '../adoption/myadoption.html';
+                                    })
+                                    // setTimeout(function () {
+                                    //
+                                    // }, 3000);
+                                    //alert(data.errorCode);
+                                } else {
+                                    $.alert(data.errorCode)
+                                }
+                            }
+                        });
+                    }
+
+                } else {
+                    $.alert("请确保您已经阅读《领养须知》")
+                }
+            },
+            //输入信息
+            inputMessage: function (e) {
+                var that = this;
+                //console.log(e.target.value)
+                if (e.target.id == "name") {
+                    that.al_uname = e.target.value;
+                } else if (e.target.id == "homeCondition") {
+                    that.al_house_condition = e.target.value;
+                } else if (e.target.id == "account") {
+                    that.al_population = e.target.value;
+                } else if (e.target.id == "calling") {
+                    that.al_number = e.target.value;
+                } else if (e.target.id == "introduction") {
+                    that.al_introduction = e.target.value;
+                    //console.log(e.target.value)
+                }
+            },
+            selectMessage: function (e) {
+                var that = this;
+                console.log(e.target.value)
+                if (e.target.id == "select0") {
+                    that.al_feeding_catdog = e.target.value;
+                } else if (e.target.id == "select1") {
+                    that.al_feedcat_experience = e.target.value;
+                } else if (e.target.id == "select2") {
+                    that.al_block = e.target.value;
+                } else if (e.target.id == "select3") {
+                    that.al_contact_type = e.target.value;
+                    //console.log(e.target.value)
+                } else if (e.target.id == "select4") {
+                    that.al_agreement = e.target.value;
+                }
+            },
+            agree: function (e) {
+                var that = this;
+                // console.log(e.target.checked);
+                if (e.target.checked) {
+                    that.checked = true;
+                } else {
+                    that.checked = false;
+                }
+            },
+            /**
+             * 显示
+             * */
+            showTip: function () {
+                var that = this;
+                $(".adoption-knowing")[0].setAttribute("style", "");
+                $("html").css("overflow","hidden");
+                $("html").css("height","100%");
+                $("body").css("overflow","hidden");
+                $("body").css("height","100%");
+            },
+            unshow: function () {
+                var that = this;
+                $(".adoption-knowing")[0].setAttribute("style", "display:none");
+                $("html").css("overflow","visible");
+                $("html").css("height","auto");
+                $("body").css("overflow","visible");
+                $("body").css("height","auto");
+            },
+            read: function (e) {
+                $(".adoption-knowing")[1].setAttribute("style","");
+                $("html").css("overflow","hidden");
+                $("html").css("height","100%");
+                $("body").css("overflow","hidden");
+                $("body").css("height","100%");
+            },
+            readed: function (e) {
+                $(".adoption-knowing")[1].setAttribute("style","display:none");
+                $("html").css("overflow","visible");
+                $("html").css("height","auto");
+                $("body").css("overflow","visible");
+                $("body").css("height","auto");
+            },
+            /**
+             * 翻页
+             */
+            touchstart: function (e) {
+                var that = this;
+                that.pageX = e.targetTouches[0].pageX;
+            },
+            touchmove: function (e) {
+                var that = this;
+                if(e.targetTouches[0].pageX - that.pageX < -100){
+                    that.left = true;
+                }else if(e.targetTouches[0].pageX - that.pageX > 100){
+                    that.right = true;
+                }
+            },
+            touchend: function (e) {
+                var that = this;
+                if(that.left){
+                    $(".adoption-knowing-message-page")[0].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[1].removeAttribute("hidden");
+                }else if(that.right){
+                    $(".adoption-knowing-message-page")[1].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[0].removeAttribute("hidden");
+                }
+                that.left = false;
+                that.right = false;
+            },
+            //翻页事件
+            touchstart_1: function (e) {
+                //console.log(e.targetTouches[0].pageX);
+                var that = this;
+                that.current = e.targetTouches[0].pageX;
+            },
+            touchmove_1: function (e) {
+                //console.log(e.targetTouches[0].pageX)
+                var that = this;
+                if(e.targetTouches[0].pageX - that.current < -100){
+                    that.left = true;
+                }else if(e.targetTouches[0].pageX - that.current > 100){
+                    that.right = true;
+                }
+            },
+            touchend_1: function (e) {
+                var that = this;
+                if(that.left){
+                    $(".adoption-knowing-message-page")[2].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[3].removeAttribute("hidden");
+                }else if(that.right){
+                    $(".adoption-knowing-message-page")[3].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[2].removeAttribute("hidden");
+                }
+                that.left = false;
+                that.right = false;
+            }
+        }
+
+    })
+
+</script>
+
+<script>
+    window.onload = function (ev) {
+        setTimeout(function () {
+            if (getUrlParam("c_id")) {
+                app.alc_id = getUrlParam("c_id");
+            }
+            if (getCookie("m_id")) {
+                app.alm_id = getCookie("m_id");
+            } else {
+                $.alert("前往登录页面？", "尚未登录", function () {
+                    //点击确认后的回调函数
+                    window.location.href = '../my/login.html';
+                });
+            }
+        }, 500)
+
+    }
+</script>
+</body>
+</html>

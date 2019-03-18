@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="publish.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div id="mypublish_page" v-cloak class="mypublish_page">
+    <div class="mypublish_navbar">
+        <div onclick="adopt(this, 0)" class="navbar_item item_on">
+            <img id="adopte_ic" class="navbar_icon" src="../images/adopte_on.png">
+            <label id="adopte_tx" class="navbar_text">待领养</label>
+        </div>
+        <div onclick="adopt(this, 1)" class="navbar_item">
+            <img id="adopted_ic" class="navbar_icon" src="../images/adopted.png">
+            <label id="adopted_tx" class="navbar_text">已领养</label>
+        </div>
+    </div>
+    <div class="adoption-list" id="adoption-list">
+        <div v-for="item in catList" class="adoption-item">
+            <div v-on:click="toDetail" :id="item.c_id" class="adoption-item-img">
+                <img :src="host + item.c_cover" width="135" style="width: 135px;height: 102px;">
+            </div>
+            <div class="adoption-item-message">
+                <div class="adoption-item-message-name">
+                    {{item.c_name}}
+                </div>
+                <div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap" class="adoption-item-message-detail">
+                    <div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap">种类: {{item.c_class}}</div>
+                    <div v-if="item.c_sex==0">性别: 男生</div>
+                    <div v-else-if="item.c_sex==1">性别: 女生</div>
+                    <div v-else-if="item.c_sex==2">性别: 未知</div>
+                    <div>健康状态: {{item.c_health==1?"健康":"伤病"}}</div>
+                    <div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap">地点: {{item.c_place}}</div>
+                </div>
+            </div>
+            <div class="adoption-item-status">
+                <div v-on:click="toProposerList" :id="label==0? item.c_id : item.alm_id" class="adoption-item-status-img">
+                    <div>{{label==0 ? '查看申请者' : '查看领养者'}}</div>
+                </div>
+                <div v-on:click="toAccuse" v-if="label==1" class="adoption-item-status-img" :data-item="JSON.stringify(item)" :style="label==0?'':'background:rgba(244,116,59,1)'">
+                    <div>我要举报</div>
+                </div>
+                <div v-on:click="adoptByOtherWay" v-if="label == 0" :data-cid="item.c_id" class="adoption-item-status-img">
+                    <div>其他渠道领养</div>
+                </div>
+                <div v-on:click="editCat" v-if="label==0" :data-id="item.c_id" class="adoption-item-status-img">
+                    <div>修改信息</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: '#mypublish_page',
+        data: {
+            catList: [],
+            label: 0,
+        },
+        methods: {
+            getMyReleaseCatList: function () {
+                var that = this;
+                $.ajax({
+                    type: "post",
+                    url: host + 'customer/cat/getMyReleaseCatList',
+                    data: {m_id: m_id},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (!res.errorCode) {
+                            if (that.label == 0) {
+                                console.log(res.catNotAdopt)
+                                that.catList = res.catNotAdopt;
+                            } else {
+                                that.catList = res.catAdoptes;
+                            }
+                        }
+
+                    }
+                })
+            },
+            toDetail: function (e) {
+                console.log(e.currentTarget.id);
+                if(e.currentTarget.id){
+                    window.location.href = "../detail/detail.html?c_id=" + e.currentTarget.id;
+                }else{
+                    $.alert("没有获取喵咪信息")
+                }
+            },
+            toAccuse: function (e) {
+                var that = this;
+                if(that.label == 1){
+                    console.log(JSON.parse(e.currentTarget.dataset.item));
+                    var item = JSON.parse(e.currentTarget.dataset.item);
+                    window.location.href = "../accuse/accuse.html?c_id=" + item.c_id + "&r_type=2&rm_target=" + item.alm_id;
+                }
+
+            },
+            toProposerList: function (e) {
+                var that = this;
+                if(that.label==0){
+                    if(e.currentTarget.id){
+                        window.location.href = "../apply/proposerList.html?c_id=" + e.currentTarget.id;
+                    }else{
+                        $.alert("未获取喵咪信息")
+                    }
+                }else{
+                    if(e.currentTarget.id){
+                        window.location.href = "../adoption/adoptor.html?m_id=" + e.currentTarget.id;
+                    }else{
+                        $.alert("未获取用户信息")
+                    }
+                }
+
+            },
+            /**
+             * 通过其他渠道领养
+             */
+            adoptByOtherWay: function (e) {
+                var that  = this;
+                console.log(e.currentTarget.dataset.cid)
+                var c_id = e.currentTarget.dataset.cid;
+                var m_id = getCookie("m_id")
+                $.confirm("是否确认该猫咪已经从其他渠道被领养",function(){
+                    //确认
+                    $.ajax({
+                        type: "post",
+                        url: host + "customer/cat/otherWayGetCat",
+                        data: {
+                            c_id: c_id,
+                            m_id: m_id,
+                        },
+                        cache: false,
+                        async: false,
+                        dataType: "JSON",
+                        success: function (res) {
+                            if(res.errorCode){
+                                alert(res.message)
+                            }else{
+                                $.toast("已确认");
+                                that.getMyReleaseCatList();
+                            }
+                        },
+                    })
+                })
+            },
+            /**
+             * 编辑喵咪信息
+             */
+            editCat: function (e) {
+                var that = this;
+                if(e.currentTarget.dataset.id){
+                    window.location.href = "publish.html?edit=1&c_id=" + e.currentTarget.dataset.id;
+                }
+            }
+        }
+    });
+</script>
+
+<!--页面JS代码-->
+<script>
+    var m_id = getCookie("m_id"); //用户id
+
+    $('#adopte_tx').css('color', '#ffffff');
+    $('#adopted_tx').css('color', '#77AF9C');
+
+    function adopt(e, id) {
+        $(e).addClass('item_on').siblings('.navbar_item').removeClass('item_on');
+        if (id == 0) {
+            $("#adopte_ic").attr('src', '../images/adopte_on.png');
+            $("#adopted_ic").attr('src', '../images/adopted.png');
+            $('#adopte_tx').css('color', '#ffffff');
+            $('#adopted_tx').css('color', '#77AF9C');
+            app.label = 0;
+            app.getMyReleaseCatList();
+            setCookie("adopt",0)
+        } else {
+            $("#adopte_ic").attr('src', '../images/adopte.png');
+            $("#adopted_ic").attr('src', '../images/adopted_on.png');
+            $('#adopted_tx').css('color', '#ffffff');
+            $('#adopte_tx').css('color', '#77AF9C');
+            app.label = 1;
+            app.getMyReleaseCatList();
+            setCookie("adopt",1)
+        }
+    }
+</script>
+<script>
+    window.onload = function (ev) {
+        app.getMyReleaseCatList();
+        if(getCookie("adopt")){
+            $(".navbar_item")[getCookie("adopt")].click();
+        }
+    }
+</script>
+</body>
+
+</html>

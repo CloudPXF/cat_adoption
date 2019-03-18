@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="my_page">
+    <div class="change-avatar" style="text-align: center">
+        <img v-on:click="chooseImg" class="my_avatar" src="../images/user_avatar.png">
+        <input v-on:change="getImg" id="inputfile" type="file" accept="image/*" hidden>
+    </div>
+    <!--<div class="login_input">-->
+        <!--<label class="input_title">修改用户名</label>-->
+        <!--<input class="input_body" type="text" id="user_name">-->
+    <!--</div>-->
+    <div class="login_input">
+        <label class="input_title">修改邮箱</label>
+        <input  v-on:input="inputEmail" class="input_body" type="text" :value="email" id="user_email">
+    </div>
+    <!--<div class="login_input">-->
+        <!--<label class="input_title">身份证号</label>-->
+        <!--<input class="input_body" type="text" id="user_IDnumber">-->
+    <!--</div>-->
+    <div class="login_input">
+        <label class="input_title">旧密码</label>
+        <input v-on:input="inputPassword" class="input_body" type="password" placeholder="不填则默认不修改" id="user_password">
+    </div>
+    <div class="login_input">
+        <label class="input_title">修改密码</label>
+        <input v-on:input="inputPassword_new" class="input_body" type="password" placeholder="不填则默认不修改" id="user_new_password">
+    </div>
+    <!--<div class="login_input">-->
+        <!--<label class="input_title">确认密码</label>-->
+        <!--<input class="input_body" type="password" id="submit_password">-->
+    <!--</div>-->
+    <button v-on:click="setting" class="login_button">确&emsp;&emsp;&emsp;&emsp;认</button>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: ".my_page",
+        data: {
+            email: "",
+            file: "",
+            password: "",
+            new_password: "",
+        },
+        methods: {
+            inputEmail: function (e) {
+                var that = this;
+                that.email = e.currentTarget.value;
+            },
+            chooseImg:function (e) {
+                //console.log("???")
+                //$("#inputfile").click();
+                return $("#inputfile").click();
+            },
+            inputPassword: function (e) {
+                var that = this;
+                that.password = e.currentTarget.value;
+            },
+            inputPassword_new: function (e) {
+                var that = this;
+                that.new_password = e.currentTarget.value;
+            },
+            getImg: function (e) {
+                //console.log(e.currentTarget.files)
+                //判断是否支持FileReader
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                } else {
+                    alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+                }
+                var file = e.currentTarget.files[0];
+                this.file = file;
+                //读取完成
+                reader.onload = function(e) {
+                    //获取图片dom
+                    var img = document.getElementsByClassName("my_avatar")[0];
+                    //图片路径设置为读取的图片
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+            setting: function () {
+                var that = this;
+                var formdata = new FormData();
+                formdata.append("m_id",getCookie("m_id"));
+                formdata.append("m_email",that.email);
+                formdata.append("m_avatar",that.file);
+                formdata.append("m_password",that.password);
+                formdata.append("m_new_password",that.new_password);
+                $.showLoading("正在修改");
+                if(getCookie("m_id")){
+                    $.ajax({
+                        type: 'POST',
+                        url: host+"/customer/user/editMemberInfo",
+                        data: formdata,
+                        cache: false,
+                        async: false,
+                        contentType: false, // 注意这里应设为false
+                        processData: false,
+                        dataType: "JSON" ,
+                        success: function(res) {
+                            if(!res.errorCode){
+                                setCookie("avatar",res.member.m_avatar,1);
+                                setCookie("email",res.member.m_email,1);
+                                $.hideLoading();
+                                $.toast("修改成功");
+                                setTimeout(function () {
+                                    window.history.go(-1);
+                                },1000)
+                            }else{
+                                alert(res.errorCode);
+                            }
+                        }
+                    });
+                }else{
+                    $.alert("前往登录页面？", "尚未登录", function() {
+                        //点击确认后的回调函数
+                        window.location.href = '../my/login.html';
+                    });
+                }
+            }
+        }
+    })
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        if(getCookie("avatar")){
+            $(".my_avatar")[0].setAttribute("src",getCookie("avatar"));
+            app.email = getCookie("email")
+        }
+    };
+</script>
+</body>
+
+</html>

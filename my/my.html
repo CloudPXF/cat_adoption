@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="my_page">
+    <img class="my_avatar" src="../images/user_avatar.png">
+    <div onclick="tosetting()" class="my_item">
+        <img class="my_item_icon" src="../images/setting.png">
+        <label class="my_item_text">设&emsp;&emsp;置</label>
+    </div>
+    <div onclick="tolike()" class="my_item">
+        <img class="my_item_icon" src="../images/my_like_1.png">
+        <label class="my_item_text">我的喜欢</label>
+    </div>
+    <!--<div class="my_item">-->
+        <!--<img class="my_item_icon" src="../images/member.png">-->
+        <!--<label class="my_item_text">会员中心</label>-->
+    <!--</div>-->
+    <div onclick="tohospital()" class="my_item">
+        <img class="my_item_icon" src="../images/hospital.png">
+        <label class="my_item_text">合作医院</label>
+    </div>
+    <div onclick="toquestion()" class="my_item">
+        <img class="my_item_icon" src="../images/question_1.png">
+        <label class="my_item_text">常见问题</label>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<!--页面JS代码-->
+<script type="text/javascript">
+    var unickname = "";
+    var avatar = "";
+    window.onload = function () {
+        if(getCookie("avatar")){
+            document.getElementsByClassName('my_avatar')[0].src = getCookie("avatar");
+        }else{
+            console.log("avatar"+getCookie('m_id'))
+        }
+    };
+
+    //跳转至设置页面
+    function tosetting() {
+        window.location.href = 'setting.html';
+    }
+
+    //跳转至我喜欢页面
+    function tolike() {
+        window.location.href = 'like.html';
+    }
+
+    //跳转至合作医院页面
+    function tohospital() {
+        window.location.href = 'hospital.html';
+    }
+    //跳转至常见问题页面
+    function toquestion() {
+        window.location.href = 'question.html';
+    }
+</script>
+</body>
+
+</html>

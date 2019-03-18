@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="my.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="message-page" id="message-page">
+    <div class="message-list">
+        <div v-for="item in messageList" class="message-item">
+            <div class="message-item-title">
+                <div class="message-status" v-if="item.me_type == 0">发布者通知</div>
+                <div class="message-status" v-else-if="item.me_type == 1">领养申请通知</div>
+                <div class="message-status" v-else-if="item.me_type == 2">领养审核通知</div>
+                <div class="message-status" v-else-if="item.me_type == 3">确认领养通知</div>
+                <div class="message-status" v-else-if="item.me_type == 4">举报通知</div>
+                <div class="message-time">{{item.create_time}}</div>
+            </div>
+            <div class="message-text">
+                {{item.me_content}}
+            </div>
+            <div class="check-button" :style="item.me_status == 0 ? '' : 'background: #ffffff;border: 1px solid;border-color:rgba(119,175,156,1)'" >
+                <div v-if="item.me_status == 0" v-on:click="readMessage" :id="item.me_id">
+                    知道了
+                </div>
+                <div v-else style="color: rgba(119,175,156,1)">
+                    已读
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: "#message-page",
+        data: {
+            messageList: [],
+        },
+        methods: {
+            getMessageList: function () {
+                var that = this;
+                $.ajax({
+                    type: 'POST',
+                    url: host+"/customer/message/getMyMessage",
+                    data: {m_id: getCookie("m_id")},
+                    cache: false,
+                    async: false,
+                    success: function(res) {
+                        if(!res.errorCode){
+                            that.messageList = res.message[0].messageList;
+                        }else{
+                            $.alert(res.errorCode);
+                        }
+                    }
+                });
+            },
+            readMessage: function (e) {
+                var that = this;
+                if(e.currentTarget.id){
+                    $.ajax({
+                        type: 'POST',
+                        url: host+"/customer/message/readMessage",
+                        data: {me_id: e.currentTarget.id},
+                        cache: false,
+                        async: false,
+                        success: function(res) {
+                            if(!res.errorCode){
+                                that.getMessageList();
+                            }else{
+                                $.alert(res.errorCode);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    })
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        app.getMessageList();
+    }
+</script>
+</body>
+
+</html>

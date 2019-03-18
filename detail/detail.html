@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<!--head start-->
+
+<head>
+    <!--网站名称-->
+    <title>熙熙领养平台</title>
+    <!--定义文档的字符编码-->
+    <meta charset="utf-8">
+    <!--指定IE和Chrome使用最新版本渲染当前页面-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--定义移动端的窗口：宽度是设备屏幕的高度、初始缩放比例为1、不允许用户手动缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--引用公用样式库-->
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入单页样式 -->
+    <link rel="stylesheet" href="detail.css">
+</head>
+
+<body ontouchstart>
+<!-- Your Code -->
+<div class="detail_page" id="detail_page">
+    <!-- 轮播图 -->
+    <div class="swiper-container" style="height: 75vw">
+        <div class="swiper-wrapper">
+            <div v-for="item in swiper" class="swiper-slide"><img :src="host+item" style="width:100%;height: 75vw;"></div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- cat_brief -->
+    <div class="detail_button">
+        <div class="btn_item">
+            <div class="btn_item-title">姓名</div>
+            <label class="btn_item_text">{{cat.c_name}}</label>
+        </div>
+        <div class="btn_item">
+            <div class="btn_item-title">性别</div>
+            <label v-if="cat.c_sex==0" class="btn_item_text">男生</label>
+            <label v-else-if="cat.c_sex==1" class="btn_item_text">女生</label>
+            <label v-else="cat.c_sex==2" class="btn_item_text">其它</label>
+        </div>
+        <div class="btn_item">
+            <div class="btn_item-title">年龄</div>
+            <label class="btn_item_text_min">{{cat.c_age}}</label>
+        </div>
+        <div class="btn_item">
+            <div class="btn_item-title">地点</div>
+            <label class="btn_item_text_min">{{cat.c_place}}</label>
+        </div>
+    </div>
+    <div class="detail_label">
+        <div class="label_item">
+            <img class="label_item_icon" src="../images/immune.png">
+            <label class="label_item_text">{{cat.c_immunization==1 ? "已免疫" : "未免疫"}}</label>
+        </div>
+        <div class="label_item">
+            <img class="label_item_icon" src="../images/opreation.png">
+            <label class="label_item_text">{{cat.c_sterilization==1 ? "已绝育" : "未绝育"}}</label>
+        </div>
+    </div>
+    <div class="detail_content">
+        <label class="content_title">性格：</label>{{cat.c_introduction}}<br>
+        <label class="content_title">领养条件：</label>{{cat.c_requirement}}
+    </div>
+    <img class="detail_sharecard" :src="host+cat.c_card">
+    <div class="detail-remind">
+        （长按可保存图片，别忘了把领养卡分享出去噢）
+    </div>
+    <a class="index-to" href="../index.html">
+        <img src="../images/index.png" />
+    </a>
+    <!-- tabbar -->
+    <div v-if="cat.cm_id != getCookie('m_id')" class="detail_tabbar">
+        <div v-on:click="like" class="tabbar_item">喜&emsp;欢</div>
+        <div v-on:click="adopt" class="tabbar_item" style="background-color: rgba(119,175,156,1);">我要领养</div>
+    </div>
+    <div class="adoption-knowing" style="display: none">
+        <div class="adoption-knowing-message">
+            <div class="adoption-knowing-title">
+                《领养须知》
+            </div>
+            <div class="adoption-knowing-message-text" v-on:touchstart="touchstart" v-on:touchmove="touchmove" v-on:touchend="touchend">
+                <div class="adoption-knowing-message-page">
+                    <div>感谢您伸出温暖的手，给流浪的它们一个属于它们的家，它结束的是生活的漂泊，而您，终结的是心灵的流浪。在领养之前，请您仔细阅读以下注意事项：</div>
+                    <div>1.生活稳定，爱猫懂猫。有固定住所，同时需得到同住的家庭成员的认可，并且接受领养前的上门家访。</div>
+                    <div>2.需认真考虑领养猫后所带来的一系列生活上的改变，要对领养的猫咪有足够的心理准备，如是否能接受猫咪的淘气、掉毛等。领养人明确知悉养猫过程中难免会有自身或猫所接触的他人被抓伤咬伤的风险。</div>
+                    <div>3.家里的窗户和阳台必须要安全地封网（网格片/铁丝网），防止猫咪坠落或擅自出走。</div>
+                </div>
+                <div class="adoption-knowing-message-page" hidden>
+                    <div>4.为猫咪提供必需的生活用品和卫生的生活环境，提供健康的饮食，科学喂养，不得虐待。</div>
+                    <div>5.定期为猫咪驱虫免疫，适龄绝育，若有伤病要及时送去医院进行治疗。</div>
+                    <div>6.领养后请与送养人保持联系，并定期向送养人更新猫咪状况。</div>
+                    <div>7.当您领养后遇到困难实在没法继续养猫时，请务必与送养人协商解决，不得自行转送猫咪。</div>
+                </div>
+            </div>
+            <div class="adoption-knowing-button-view">
+                <div v-on:click="cancelAdopt" class="adoption-knowing-button" style="border-bottom-left-radius: 5px;border-right: 1px solid;border-color: #ffffff"><div>再想想</div></div>
+                <div v-on:click="ensureAdopt" class="adoption-knowing-button" style="border-bottom-right-radius: 5px;"><div>已阅读，申请领养</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引用公用JS库-->
+<script src="../lib/jquery-2.1.4.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--iOS 系统下默认的 click 事件会有300毫秒的延迟，可以使用 fastclick 来消除这个延迟-->
+<script src="../lib/fastclick.js"></script>
+<script src="../js/jquery-weui.js"></script>
+<!--轮播图-->
+<script src="../js/swiper.min.js"></script>
+<!--JS公用方法-->
+<script src="../js/common.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    var app = new Vue({
+        el: "#detail_page",
+        data: {
+            swiper: [],
+            cat: {},
+            current: 0,
+            left: false,
+            right: false,
+        },
+        methods: {
+            //得到喵咪信息
+            getCatMessage: function () {
+                var that = this;
+                $.ajax({
+                    type: "post",
+                    url: host + 'customer/cat/getCatCardInfo',
+                    data: {c_id: getUrlParam('c_id')},
+                    cache: false,
+                    async: false,
+                    dataType: "JSON" ,
+                    success: function (res) {
+                        //alert(res);
+                        //console.log(res);
+                        that.cat = res.cat;
+                        that.swiper = JSON.parse(res.cat.c_img);
+                        console.log(that.swiper)
+                        if(that.cat.c_status != 3 && that.cat.c_status != 5){
+                            $(".detail_sharecard")[0].setAttribute("style","display:none")
+                        }
+                    },
+                    error: function (res) {
+                        alert(res)
+                    }
+                })
+            },
+            //我喜欢
+            like: function (e) {
+                var that = this;
+                if(getCookie("m_id")){
+                    var c_id = getUrlParam("c_id");
+                    var m_id = getCookie("m_id");
+                    if(c_id){
+                        $.ajax({
+                            type: "post",
+                            url: host + 'customer/user/like',
+                            data: {m_id: m_id,c_id: c_id},
+                            cache: false,
+                            async: false,
+                            dataType: "JSON" ,
+                            success: function (res) {
+                                if(!res.errorcode){
+                                    $.toast("点赞成功")
+                                }else{
+                                    $.alert(res.errorcode);
+                                }
+                            },
+                        })
+                    }
+                }else{
+                    $.alert("前往登录页面？", "尚未登录", function() {
+                        //点击确认后的回调函数
+                        window.location.href = '../my/login.html';
+                    });
+                }
+
+            },
+            //领养动作
+            adopt:function () {
+                var that= this;
+                $(".adoption-knowing")[0].setAttribute("style","");
+                $(".swiper-wrapper")[0].setAttribute("style","display:none");
+            },
+            //暂不领养
+            cancelAdopt: function () {
+                var that = this;
+                $(".adoption-knowing")[0].setAttribute("style","display: none");
+                $(".swiper-wrapper")[0].setAttribute("style","");
+            },
+            //确认领养
+            ensureAdopt: function () {
+                if(getCookie("m_id")){
+                    window.location.href = "../apply/apply.html?c_id=" + this.cat.c_id;
+                }else{
+                    $.alert("前往登录页面？", "尚未登录", function() {
+                        //点击确认后的回调函数
+                        window.location.href = '../my/login.html';
+                    });
+                }
+            },
+            //翻页事件
+            touchstart: function (e) {
+                //console.log(e.targetTouches[0].pageX);
+                var that = this;
+                that.current = e.targetTouches[0].pageX;
+            },
+            touchmove: function (e) {
+                //console.log(e.targetTouches[0].pageX)
+                var that = this;
+                if(e.targetTouches[0].pageX - that.current < -100){
+                    that.left = true;
+                }else if(e.targetTouches[0].pageX - that.current > 100){
+                    that.right = true;
+                }
+            },
+            touchend: function (e) {
+                var that = this;
+                if(that.left){
+                    $(".adoption-knowing-message-page")[0].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[1].removeAttribute("hidden");
+                }else if(that.right){
+                    $(".adoption-knowing-message-page")[1].setAttribute("hidden","");
+                    $(".adoption-knowing-message-page")[0].removeAttribute("hidden");
+                }
+                that.left = false;
+                that.right = false;
+            }
+        }
+    })
+</script>
+
+<!--页面JS代码-->
+<script type="text/javascript">
+    window.onload = function () {
+        //检查cookie是否保存用户信息
+        // if (checkCookie()) {
+        //     //$.alert("cookie")
+        //     nickname = getCookie("nickname");
+        //     avatar = getCookie("avatar");
+        // } else {
+        //     var code = getUrlParam('code');
+        //     //alert(getUrlParam('usertype '));
+        //     if (code != null) {
+        //         //获取用户信息
+        //         var u_join_type = 0;
+        //         if(getUrlParam("u_join_type")){
+        //             u_join_type = 1
+        //         }
+        //         $.post("../customer/user/saveUserInfo", {code: code, u_join_type: u_join_type}, function (data) {
+        //             //console.log(data);
+        //             if (!data.errorCode) {
+        //                 $.alert("success")
+        //                 var openid = data.userInfo.u_openid;
+        //                 nickname = data.userInfo.u_nickname;
+        //                 avatar = data.userInfo.u_avatar;
+        //                 setCookie("openid", openid, 1);
+        //                 setCookie("nickname", nickname, 1);
+        //                 setCookie("avatar", avatar, 1);
+        //             } else {
+        //                 $.alert(data.errorCode)
+        //             }
+        //         });
+        //     } else {
+        //         //微信授权登录
+        //         $.alert("授权")
+        //         if(getUrlParam('u_join_type')){
+        //             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe2141617ff8a8c53&redirect_uri=http://xxkwd.xyz/cat_adoption2/front/index.html?u_join_type='+ getUrlParam("u_join_type") +'&response_type=code&scope=snsapi_userinfo';
+        //         }else{
+        //             window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe2141617ff8a8c53&redirect_uri=http://xxkwd.xyz/cat_adoption2/front/index.html&response_type=code&scope=snsapi_userinfo';
+        //         }
+        //     }
+        // }
+        if(getUrlParam('c_id')){
+            app.getCatMessage();
+            //轮播图
+            setTimeout(function () {
+                $(".swiper-container").swiper({
+                    loop: true,
+                    autoplay: 3000
+                });
+            },300)
+            //alert(getUrlParam('u_join_type'))
+        }
+
+    };
+</script>
+</body>
+
+</html>

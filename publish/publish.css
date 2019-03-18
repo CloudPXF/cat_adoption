@@ -1,0 +1,318 @@
+.publish_page {
+    padding-top: 20px;
+    display: none;
+    flex-direction: column;
+}
+
+.publish_input {
+    width: 80%;
+    height: 32px;
+    margin: 0 auto 18px auto;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #77AF9C;
+    border-radius: 5px;
+}
+
+.input_title {
+    height: 100%;
+    line-height: 32px;
+    margin: 0 15px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+.input_body {
+    width: 60%;
+    border: 0;
+    font-size: 16px;
+    color: #999999;
+}
+
+.publish_textarea {
+    width: 80%;
+    margin: 0 auto 18px auto;
+    border: 1.5px solid #77AF9C;
+    border-radius: 5px;
+}
+
+.textarea_title {
+    line-height: 32px;
+    margin: 0 15px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+.textarea_body {
+    width: 90%;
+    height: 100px;
+    margin: 0 15px;
+    border: 0;
+    font-size: 16px;
+    color: #999999;
+}
+
+.publish_upload {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.upload_title {
+    line-height: 32px;
+    font-size: 16px;
+    color: #77AF9C;
+}
+
+.weui-agree {
+    margin: 10px auto;
+}
+
+.publish_button {
+    width: 80%;
+    height: 32px;
+    margin: 0 auto 50px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #77AF9C;
+    border: 2px solid #77AF9C;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white;
+}
+
+.publish_tips {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tips_title {
+    margin: 20px auto;
+    font-size: 23px;
+    color: #84B7A6;
+}
+
+.tips_content {
+    width: 85%;
+    font-size: 15px;
+    color: #84B7A6;
+}
+
+.tips_btn {
+    width: 70%;
+    height: 32px;
+    margin: 50px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background-color: #84B7A6;
+    border: 2px solid #77AF9C;
+    font-size: 16px;
+    color: white;
+}
+
+.publish_success {
+    width: 85%;
+    margin: 100px auto;
+    position: relative;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: #efeff4;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.success_icon {
+    width: 50px;
+    height: 55px;
+    position: absolute;
+    right: 10px;
+    top: -50px;
+}
+
+.success_title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #285943;
+}
+
+.success_content {
+    font-size: 15px;
+    color: #285943;
+}
+
+
+.mypublish_navbar{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    border-bottom: 2px solid #eee;
+    box-shadow: 1px 0 2px rgba(0,0,0,0.1);
+}
+
+.navbar_item{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.item_on{
+    background-color: #285943;
+}
+
+.navbar_icon{
+    width: 30px;
+    height: 30px;
+}
+
+.navbar_text{
+    font-size: 12px;
+    color: #ffffff;
+}
+
+/**
+    领养列表
+ */
+.adoption-list{
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.adoption-item {
+    margin-top: 15px;
+    width: 100%;
+    height: 120px;
+    background: rgba(239,239,244,1);
+    display: flex;
+    align-items: center;
+}
+.adoption-item-img{
+    margin-left: 7px;
+    height: 102px;
+}
+.adoption-item-message{
+    width: 110px;
+    margin-left: 10px;
+}
+.adoption-item-message-name{
+    font-size: 16px;
+    font-weight: bold;
+    font-family:PingFang-SC-Bold;
+    color:rgba(40,89,67,1);
+}
+.adoption-item-message-detail{
+    font-size: 13px;
+    font-weight: normal;
+    font-family:PingFang-SC-Regular;
+    color:rgba(40,89,67,1);
+    line-height:20px;
+}
+.adoption-item-status-img{
+    width: 72px;
+    height: 25px;
+    border-radius: 12.5px;
+    background: rgba(119,175,156,1);
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+.adoption-item-status-img div{
+    width: 72px;
+    font-size: 11px;
+    font-family:PingFang-SC-Regular;
+    line-height:16px;
+    color: #ffffff;
+    text-align: center;
+}
+.adoption-item-status{
+    margin-left: 10px;
+    padding-bottom: 10px;
+}
+
+[v-cloak]{
+    display:none
+}
+/**
+图片裁剪工具
+ */
+.crop-containner{
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+}
+.crop-button{
+    width: 50%;
+    margin-left: 25%;
+    text-align: center;
+    background: #cccccc;
+    position: absolute;
+    bottom: 20px;
+    font-weight: bold;
+}
+.crop-containner-img{
+    height: 90%;
+    display: flex;
+    align-items: center;
+}
+.crop-containner-img img{
+    width: 100%;
+}
+
+.layer{
+    width: 100vw;
+    height: 100vh;
+    overflow-y: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+.layer-bg{
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+}
+.layer-content{
+    position: relative;
+    background: #fff;
+    width: 80%;
+    margin-left: 10%;
+    z-index: 1000;
+    margin-top: 50%;
+    border-radius: 10px;
+}
+.layer-content-close{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.layer-content-title{
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+    padding-top: 25px;
+}
+.layer-content-text{
+    font-size: 14px;
+    margin-left: 15px;
+    margin-right: 15px;
+    text-indent: 28px;
+    padding-bottom: 15px;
+}
